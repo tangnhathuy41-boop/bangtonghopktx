@@ -4,6 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>KTX Splitter & Clean - Quản Lý Chi Tiêu & Lịch Vệ Sinh KTX</title>
+
+  <!-- Anti-cache meta tags: Ngăn chặn trình duyệt lưu cache cũ, đảm bảo mọi thiết bị luôn tải phiên bản mới nhất -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Font Awesome Icons -->
@@ -211,6 +217,10 @@
 
     <!-- Sidebar Footer with quick actions -->
     <div class="p-4 border-t border-slate-100 bg-slate-50 space-y-2">
+      <button onclick="forceReloadLatest()" class="w-full py-2 px-3 bg-amber-50 hover:bg-amber-100 text-amber-800 font-bold text-xs rounded-xl border border-amber-200 flex items-center justify-center gap-2 transition" title="Xóa cache và tải lại bản mới nhất">
+        <i class="fa-solid fa-rotate text-amber-600"></i>
+        <span>Làm Mới Bỏ Cache (Tải Bản Mới)</span>
+      </button>
       <button onclick="toggleSidebar(false); openRoomSettingsModal();" class="w-full py-2 px-3 bg-white hover:bg-slate-100 text-slate-700 font-semibold text-xs rounded-xl border border-slate-200 flex items-center justify-center gap-2">
         <i class="fa-solid fa-pen-to-square text-indigo-600"></i>
         <span>Đổi Tên Phòng KTX</span>
@@ -2854,6 +2864,16 @@
       showToast("Đã tải về file sao lưu dự phòng!");
     }
 
+    // Hàm ép buộc trình duyệt điện thoại/máy tính bỏ qua bộ nhớ đệm (Cache-busting)
+    function forceReloadLatest() {
+      showToast("Đang tải lại bản mới nhất...", "success");
+      setTimeout(() => {
+        const url = new URL(window.location.href);
+        url.searchParams.set('_v', Date.now().toString());
+        window.location.href = url.toString();
+      }, 400);
+    }
+
     // --- GEMINI API INTEGRATIONS ---
     const GEMINI_API_KEY = "";
     const GEMINI_MODEL = "gemini-3-flash-preview";
@@ -3154,6 +3174,7 @@ CHỈ TRẢ VỀ DUY NHẤT ĐỊNH DẠNG JSON HỢP LỆ, KHÔNG KÈM BẤT K�
       toggleSidebar,
       openRoomSettingsModal,
       exportDataJson,
+      forceReloadLatest,
       openScanBillModal,
       openShareReportModal,
       selectTabFromSidebar,
