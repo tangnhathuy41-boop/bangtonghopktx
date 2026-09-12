@@ -1259,7 +1259,7 @@
     import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
     // --- APP STATE ---
-    const STORAGE_KEY = 'KTX_SPLITTER_CLEAN_DATA_v2';
+    const STORAGE_KEY = 'KTX_SPLITTER_CLEAN_DATA_v3';
 
     const defaultState = {
       roomName: "Phòng KTX",
@@ -1348,6 +1348,20 @@
     let db = null;
     let currentUser = null;
     let isCloudSyncActive = false;
+
+    // Helper trích xuất tên gọi chính (Ví dụ: "Nhật Huy (Trưởng Phòng)" => "Huy", "Văn Bảo" => "Bảo", "Văn Dương" => "Dương")
+    function getShortName(fullName) {
+      if (!fullName) return '';
+      const clean = fullName.replace(/\(.*?\)/g, '').trim();
+      const parts = clean.split(/\s+/).filter(Boolean);
+      return parts.length > 0 ? parts[parts.length - 1] : fullName;
+    }
+
+    // Helper lấy chữ cái viết tắt đại diện cho avatar (Ví dụ: "Huy" => "H")
+    function getNameInitial(fullName) {
+      const short = getShortName(fullName);
+      return short ? short.charAt(0).toUpperCase() : '?';
+    }
 
     function updateCloudSyncBadge(statusText, isOnline) {
       const badge = document.getElementById('cloudSyncBadge');
@@ -1611,6 +1625,7 @@
           const recent = appData.notices.slice(0, 3);
           topContainer.innerHTML = recent.map(n => {
             const tag = getNoticeTag(n.type);
+            const authorShort = n.authorName ? getShortName(n.authorName) : 'Phòng';
             return `
               <div class="p-1.5 sm:px-2.5 sm:py-2 rounded-lg bg-white border border-slate-200/80 hover:border-amber-300 transition flex items-center justify-between gap-2 shadow-xs">
                 <div class="flex items-center gap-1.5 min-w-0 flex-grow">
@@ -1623,7 +1638,7 @@
                     <div class="text-[10px] text-slate-400 truncate leading-tight">${n.content}</div>
                   </div>
                 </div>
-                <span class="text-[9px] text-slate-400 shrink-0 font-semibold px-1 py-0.5 bg-slate-50 rounded border border-slate-100">${n.authorName ? n.authorName.split(' ')[0] : 'Phòng'}</span>
+                <span class="text-[9px] text-slate-500 shrink-0 font-bold px-1.5 py-0.5 bg-slate-50 rounded border border-slate-200">${authorShort}</span>
               </div>
             `;
           }).join('');
@@ -1897,7 +1912,7 @@
           const isAll = item.beneficiaries.length === appData.members.length;
           const beneNames = item.beneficiaries.map(bid => {
             const m = appData.members.find(mb => mb.id === bid);
-            return m ? m.name.split(' ')[0] : '?';
+            return m ? getShortName(m.name) : '?';
           }).join(', ');
 
           return `
@@ -1952,7 +1967,7 @@
           const perPerson = Math.round(item.amount / shareCount);
           const beneNames = item.beneficiaries.map(bid => {
             const m = appData.members.find(mb => mb.id === bid);
-            return m ? m.name.split(' ')[0] : '?';
+            return m ? getShortName(m.name) : '?';
           }).join(', ');
           const isAll = item.beneficiaries.length === appData.members.length;
 
@@ -2012,14 +2027,18 @@
       let grandTotal = 0;
 
       appData.expenses.forEach(exp => {
-        const amount = exp.amount;
+        const amount = Number(exp.amount) || 0;
         grandTotal += amount;
         if (totalPaid[exp.payerId] !== undefined) {
           totalPaid[exp.payerId] += amount;
         }
 
-        const sharePerPerson = amount / (exp.beneficiaries.length || 1);
-        exp.beneficiaries.forEach(bId => {
+        const beneficiaries = Array.isArray(exp.beneficiaries) && exp.beneficiaries.length > 0
+          ? exp.beneficiaries
+          : appData.members.map(m => m.id);
+
+        const sharePerPerson = amount / beneficiaries.length;
+        beneficiaries.forEach(bId => {
           if (totalShare[bId] !== undefined) {
             totalShare[bId] += sharePerPerson;
           }
@@ -2165,7 +2184,7 @@
               <div class="flex items-center justify-between gap-2">
                 <div class="flex items-center gap-2.5 min-w-0">
                   <div class="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-700 font-black text-xs flex items-center justify-center shrink-0 border border-indigo-100">
-                    ${m.name.charAt(0).toUpperCase()}
+                    ${getNameInitial(m.name)}
                   </div>
                   <div class="min-w-0">
                     <h4 class="font-bold text-xs text-slate-900 truncate">${m.name}</h4>
@@ -2248,7 +2267,7 @@
         return;
       }
 
-      const memo = `Tien phong KTX ${senderName.split(' ')[0]}`.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9 ]/g, '');
+      const memo = `Tien phong KTX ${getShortName(senderName)}`.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9 ]/g, '');
       const qrUrl = `https://img.vietqr.io/image/${receiver.bank}-${receiver.account}-compact2.png?amount=${amount}&addInfo=${encodeURIComponent(memo)}&accountName=${encodeURIComponent(receiver.name)}`;
 
       currentQRDetail = {
@@ -2282,7 +2301,7 @@
       const todayDuty = appData.cleaningSchedule.find(s => s.dayIndex === todayIndex);
       if (todayDuty) {
         const member = appData.members.find(m => m.id === todayDuty.memberId);
-        const shortName = member ? member.name.split(' ')[0] : "Chưa có";
+        const shortName = member ? getShortName(member.name) : "Chưa có";
         document.getElementById('statTodayDutyPerson').innerText = member ? `${todayDuty.emoji || '🧹'} ${member.name}` : "Chưa có";
         
         const compactDuty = document.getElementById('statCompactTodayDuty');
@@ -2663,7 +2682,7 @@
             <div>
               <div class="flex items-center justify-between mb-2">
                 <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-500 to-teal-400 text-white font-black text-xs flex items-center justify-center">
-                  ${m.name.charAt(0).toUpperCase()}
+                  ${getNameInitial(m.name)}
                 </div>
                 <div class="flex items-center gap-1">
                   <button onclick="openEditMemberModal('${m.id}')" class="text-slate-400 hover:text-indigo-600 p-1 rounded-lg transition" title="Chỉnh sửa">
@@ -3171,6 +3190,8 @@ CHỈ TRẢ VỀ DUY NHẤT ĐỊNH DẠNG JSON HỢP LỆ, KHÔNG KÈM BẤT K�
     }
 
     Object.assign(window, {
+      getShortName,
+      getNameInitial,
       toggleSidebar,
       openRoomSettingsModal,
       exportDataJson,
@@ -3221,13 +3242,19 @@ CHỈ TRẢ VỀ DUY NHẤT ĐỊNH DẠNG JSON HỢP LỆ, KHÔNG KÈM BẤT K�
       openAIAssistantModal
     });
 
-    window.onload = function() {
+    function startApp() {
       initData();
       renderExpenseInputs();
       updateUI();
       switchTab('expenses');
       initCloudSync(); // Kích hoạt kết nối đồng bộ đa thiết bị
-    };
+    }
+
+    if (document.readyState === 'loading') {
+      window.addEventListener('DOMContentLoaded', startApp);
+    } else {
+      startApp();
+    }
   </script>
 </body>
 </html>
