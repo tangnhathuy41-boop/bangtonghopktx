@@ -65,6 +65,10 @@
       animation: scanLaser 2s infinite ease-in-out;
     }
   </style>
+  <script src="https://gstatic.com"></script>
+  <script src="https://gstatic.com"></script>
+</head>
+
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col antialiased selection:bg-indigo-100 selection:text-indigo-700">
 
@@ -2944,6 +2948,49 @@
     window.addEventListener('DOMContentLoaded', () => {
       initAutoCloudEngine();
     });
+  </script>
+    // 1. Cấu hình Firebase để liên kết các máy với nhau
+    const firebaseConfig = {
+      apiKey: "AIzaSy...", // Điền key của bạn khi tạo dự án Firebase
+      authDomain: "://firebaseapp.com",
+      databaseURL: "https://firebaseio.com",
+      projectId: "quanlyktx-xxx",
+    };
+
+    // Khởi tạo hệ thống
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+    const roomRef = database.ref('rooms/phong402');
+
+    // 2. TỰ ĐỘNG CẬP NHẬT GIAO DIỆN KHI MÁY KHÁC SỬA ĐỔI
+    roomRef.on('value', (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        // Cập nhật số tiền hiển thị trên giao diện từ thiết bị khác gửi về
+        // (Thay 'totalExpense' bằng ID thẻ hiển thị 145.000đ của bạn)
+        const totalElement = document.getElementById('totalExpense');
+        if(totalElement) totalElement.innerText = data.tongChiTieu + " ₫";
+        
+        // Đổi trạng thái dấu chấm thành màu xanh báo hiệu đã khớp dữ liệu
+        document.getElementById('autoSyncStatusText').innerText = "Đã đồng bộ";
+        document.getElementById('autoSyncDot').className = "w-2 h-2 rounded-full bg-emerald-500 animate-pulse";
+      }
+    });
+
+    // 3. TỰ ĐỘNG KIỂM TRA BẢN CẬP NHẬT MÃ NGUỒN MỚI TRÊN GITHUB PAGES
+    function autoCheckVersion() {
+      const currentVersion = "#8a7b6c"; // Khớp với phiên bản hiện tại bạn ghi trong UI
+      fetch('./version.json?t=' + new Date().getTime(), { cache: "no-store" })
+        .then(res => res.json())
+        .then(data => {
+          if (data.version && data.version !== currentVersion) {
+            // Tự động reload tải lại bản mới cứng từ server không cần bấm nút
+            window.location.reload();
+          }
+        }).catch(e => console.log(e));
+    }
+    // Tự động kiểm tra phiên bản code mới mỗi 20 giây một lần
+    setInterval(autoCheckVersion, 60000);
   </script>
 </body>
 </html>
