@@ -3,20 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="theme-color" content="#4f46e5">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-
-  <!-- ================================================================= -->
-  <!-- 1. BỘ THẺ META CACHE-CONTROL HEADERS (CHỐNG LƯU BẢN CŨ TRÊN THIẾT BỊ) -->
-  <!-- ================================================================= -->
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <!-- 2. HASHED BUILD VERSION: Cập nhật mã hash này khi deploy bản mới -->
-  <meta name="build-version" content="main.8a7b6c">
+  <meta name="theme-color" content="#4f46e5">
 
-  <title>KTX Splitter & Clean - Quản Lý KTX</title>
+  <title>KTX Splitter & Clean - Quản Lý Phòng KTX</title>
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -76,27 +68,11 @@
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col antialiased selection:bg-indigo-100 selection:text-indigo-700">
 
-  <!-- BANNER TỰ ĐỘNG BÁO BẢN CẬP NHẬT MỚI TỪ SERVER (CACHE-BUSTING NOTIFICATION) -->
-  <div id="newVersionBanner" class="hidden sticky top-0 z-50 bg-gradient-to-r from-amber-500 via-orange-500 to-rose-600 text-white px-4 py-2.5 shadow-md flex items-center justify-between gap-3 text-xs animate-fadeIn">
-    <div class="flex items-center gap-2 font-bold min-w-0">
-      <span class="w-2.5 h-2.5 rounded-full bg-white animate-ping shrink-0"></span>
-      <span class="truncate">Đã có bản cập nhật mới trên server (<span id="newVersionTag" class="font-mono underline">main.xxxxxx</span>)!</span>
-    </div>
-    <div class="flex items-center gap-2 shrink-0">
-      <button onclick="forceCleanCacheAndReload()" class="px-3 py-1 rounded-lg bg-white text-slate-900 font-extrabold hover:bg-amber-100 transition shadow-xs">
-        Làm mới ngay
-      </button>
-      <button onclick="dismissNewVersionBanner()" class="p-1 text-white/80 hover:text-white transition">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
-    </div>
-  </div>
-
-  <!-- HEADER / NAVBAR CHÍNH -->
+  <!-- HEADER / NAVBAR GỌN GÀNG (100% TỰ ĐỘNG, KHÔNG RƯỜM RÀ) -->
   <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200/80 px-3 sm:px-6 py-2.5 shadow-xs">
     <div class="max-w-6xl mx-auto flex items-center justify-between gap-2 sm:gap-4">
       
-      <!-- Cột Trái: Nút Menu Sidebar & Tên Phòng KTX -->
+      <!-- Cột Trái: Menu & Tên Phòng KTX -->
       <div class="flex items-center gap-2 sm:gap-3 min-w-0">
         <button onclick="toggleSidebar(true)" class="p-2 text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition shrink-0" title="Mở danh mục menu">
           <i class="fa-solid fa-bars text-lg"></i>
@@ -104,32 +80,24 @@
 
         <button onclick="openRoomSettingsModal()" class="flex items-center gap-2 px-2.5 py-1.5 rounded-xl hover:bg-slate-100 transition min-w-0 group" title="Bấm để đổi tên phòng">
           <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 to-teal-500 text-white flex items-center justify-center font-bold text-sm shadow-sm shrink-0">
-            <i class="fa-solid fa-building"></i>
+            <i class="fa-solid fa-people-roof"></i>
           </div>
           <div class="text-left min-w-0">
             <div class="flex items-center gap-1.5">
-              <span id="headerRoomTitle" class="font-extrabold text-slate-900 text-xs sm:text-sm truncate max-w-[120px] xs:max-w-[170px] sm:max-w-[240px]">Phòng 402 - KTX</span>
+              <span id="headerRoomTitle" class="font-extrabold text-slate-900 text-xs sm:text-sm truncate max-w-[150px] xs:max-w-[210px] sm:max-w-[280px]">Phòng 402 - KTX</span>
               <i class="fa-solid fa-pen text-[10px] text-slate-400 group-hover:text-indigo-600 transition"></i>
             </div>
-            <div class="flex items-center gap-1.5 text-[10px] text-slate-400 font-medium">
-              <span id="stateSyncIndicator" class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span id="stateSyncText">Trực tuyến</span>
-              <span class="text-slate-300">•</span>
-              <!-- HASHED VERSION PILL TRÊN HEADER -->
-              <span class="font-mono font-bold text-indigo-600 bg-indigo-50 px-1.5 py-0.2 rounded border border-indigo-200">#8a7b6c</span>
+            <!-- Trạng thái tự động kết nối ngầm -->
+            <div class="flex items-center gap-1.5 text-[10px] font-semibold text-emerald-600">
+              <span id="autoSyncDot" class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span id="autoSyncStatusText">Trực tuyến</span>
             </div>
           </div>
         </button>
       </div>
 
-      <!-- Cột Phải: Nút Xóa Cache, Quét Bill AI & Báo cáo Zalo -->
+      <!-- Cột Phải: Quét Bill AI & Báo Cáo Zalo -->
       <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
-        <!-- Nút Xóa Cache & Tải lại bản mới nhất -->
-        <button onclick="forceCleanCacheAndReload()" class="flex items-center gap-1.5 text-xs font-bold px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl bg-slate-100 hover:bg-amber-50 text-slate-700 hover:text-amber-800 border border-slate-200 hover:border-amber-300 transition shrink-0" title="Xóa bộ nhớ đệm và tải lại mã mới nhất từ server">
-          <i class="fa-solid fa-rotate text-xs text-amber-600"></i>
-          <span class="hidden sm:inline">Xóa Cache</span>
-        </button>
-
         <!-- Nút Quét Bill AI -->
         <button onclick="openScanBillModal()" class="flex items-center gap-1.5 text-xs font-bold px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 text-white shadow-xs hover:opacity-95 transition shrink-0" title="Quét hóa đơn tự động bằng AI">
           <i class="fa-solid fa-camera text-xs"></i>
@@ -146,7 +114,7 @@
     </div>
   </header>
 
-  <!-- SIDEBAR MENU DRAWER -->
+  <!-- SIDEBAR MENU DRAWER (TRƯỢT TỪ TRÁI SANG) -->
   <div id="sidebarOverlay" onclick="toggleSidebar(false)" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs transition-opacity opacity-0 pointer-events-none duration-300"></div>
   <aside id="sidebarDrawer" class="fixed top-0 left-0 bottom-0 z-50 w-72 sm:w-80 bg-white shadow-2xl flex flex-col transform -translate-x-full transition-transform duration-300 ease-in-out border-r border-slate-200">
     <div class="p-4 border-b border-slate-100 flex items-center justify-between">
@@ -156,7 +124,7 @@
         </div>
         <div>
           <h2 class="font-extrabold text-slate-900 text-sm">KTX Split & Clean</h2>
-          <p class="text-[10px] text-slate-400">Quản lý chi tiêu & trực nhật</p>
+          <p class="text-[10px] text-slate-400">Quản lý phòng sòng phẳng</p>
         </div>
       </div>
       <button onclick="toggleSidebar(false)" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:text-slate-800 flex items-center justify-center transition">
@@ -175,6 +143,10 @@
           Đổi tên
         </button>
       </div>
+      <div class="mt-2 text-[10px] text-emerald-700 font-semibold flex items-center gap-1.5">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span>Dữ liệu tự động khớp nối giữa các máy</span>
+      </div>
     </div>
 
     <!-- Danh sách chức năng chính -->
@@ -192,7 +164,7 @@
       <button onclick="selectTabFromSidebar('settlement')" id="navSettlementBtn" class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition">
         <div class="flex items-center gap-2.5">
           <i class="fa-solid fa-scale-balanced w-4 text-center text-teal-600"></i>
-          <span>Quyết Toán & VietQR Tự Động</span>
+          <span>Quyết Toán & VietQR</span>
         </div>
         <span class="text-[10px] text-teal-600 font-extrabold">Đối soát</span>
       </button>
@@ -221,16 +193,11 @@
         <span id="sidebarMemberCountBadge" class="px-1.5 py-0.5 rounded-full text-[10px] bg-slate-100 text-slate-700 font-extrabold">6</span>
       </button>
 
-      <!-- Mục Cài đặt & Xử lý Cache -->
+      <!-- Cài đặt cơ bản -->
       <div class="pt-3 border-t border-slate-100 mt-2">
-        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-1">Cài Đặt & Bộ Nhớ Đệm</div>
+        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-1">Cài Đặt & Dữ Liệu</div>
 
-        <button onclick="forceCleanCacheAndReload()" class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-amber-700 bg-amber-50 hover:bg-amber-100 transition">
-          <i class="fa-solid fa-rotate w-4 text-center"></i>
-          <span>Xóa Cache & Nạp Bản Mới</span>
-        </button>
-
-        <button onclick="toggleSidebar(false); openRoomSettingsModal();" class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 transition mt-1">
+        <button onclick="toggleSidebar(false); openRoomSettingsModal();" class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 transition">
           <i class="fa-solid fa-pen-to-square w-4 text-center text-indigo-500"></i>
           <span>Đổi Tên Phòng KTX</span>
         </button>
@@ -242,14 +209,8 @@
       </div>
     </div>
 
-    <!-- FOOTER DRAWER: THÔNG TIN BẢN DỰNG HASHED BUILD -->
-    <div class="p-3 border-t border-slate-100 text-center text-[10px] text-slate-400 space-y-1">
-      <div class="flex items-center justify-center gap-1.5 font-mono text-[10px]">
-        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-        <span class="text-slate-500">Bản dựng:</span>
-        <span class="font-bold text-indigo-600 bg-indigo-50 px-1.5 py-0.2 rounded border border-indigo-200">#8a7b6c</span>
-      </div>
-      <div class="text-[9px] text-slate-400">Cấu hình: Cache-Control: max-age=0</div>
+    <div class="p-3 border-t border-slate-100 text-center text-[10px] text-slate-400">
+      ⚡ Tự động cập nhật ngầm trên mọi thiết bị
     </div>
   </aside>
 
@@ -315,7 +276,7 @@
       </button>
     </div>
 
-    <!-- KHỐI THỐNG KÊ ĐẦY ĐỦ -->
+    <!-- KHỐI THỐNG KÊ ĐẦY ĐỦ CHO TAB THÔNG BÁO -->
     <div id="fullStatsContainer" class="hidden grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4">
       <div class="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200/80 shadow-xs">
         <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Tổng chi tiêu</div>
@@ -354,7 +315,7 @@
             </div>
             <div>
               <h3 class="font-extrabold text-slate-900 text-sm sm:text-base">Thêm Khoản Chi Mới</h3>
-              <p class="text-[11px] text-slate-400">Ghi nhận tiền mua đồ dùng chung hoặc tiền sinh hoạt</p>
+              <p class="text-[11px] text-slate-400">Ghi nhận chi tiêu - Tự động đồng bộ sang tất cả điện thoại</p>
             </div>
           </div>
 
@@ -474,7 +435,7 @@
               <i class="fa-solid fa-route text-teal-400"></i>
               <span>Lộ Trình Chuyển Tiền Bù Trừ Tối Ưu</span>
             </h3>
-            <p class="text-xs text-slate-300">Thuật toán giảm số lần chuyển khoản giữa các thành viên</p>
+            <p class="text-xs text-slate-300">Tự động cập nhật "ĐÃ NỘP" tức thì khi chuyển khoản</p>
           </div>
           <button onclick="openShareReportModal()" class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition flex items-center gap-1.5">
             <i class="fa-solid fa-copy"></i>
@@ -491,7 +452,7 @@
         <div class="pb-3 mb-3 border-b border-slate-100 flex items-center justify-between">
           <div>
             <h3 class="font-extrabold text-slate-900 text-sm sm:text-base">Đối Soát Chi Tiêu Từng Bạn</h3>
-            <p class="text-[11px] text-slate-400">Tự động cập nhật nhãn "ĐÃ NỘP" khi hoàn tất chuyển khoản</p>
+            <p class="text-[11px] text-slate-400">Tự động cập nhật trạng thái "ĐÃ NỘP" và đồng bộ lên tất cả các máy</p>
           </div>
           <span class="text-[10px] font-bold px-2 py-1 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200">
             <i class="fa-solid fa-circle-check mr-1"></i>Sòng phẳng
@@ -555,7 +516,7 @@
         <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-100">
           <div>
             <h3 class="font-extrabold text-slate-900 text-sm sm:text-base">Checklist Vệ Sinh Chuẩn Phòng KTX</h3>
-            <p class="text-[11px] text-slate-400">Các hạng mục cần hoàn thành trước giờ ban quản lý kiểm tra</p>
+            <p class="text-[11px] text-slate-400">Các việc cần hoàn thành trước giờ ban quản lý kiểm tra</p>
           </div>
           <button onclick="openAddChecklistModal()" class="px-2.5 py-1 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition">
             + Thêm việc
@@ -568,7 +529,7 @@
       </div>
     </div>
 
-    <!-- ==================== TAB 4: BẢNG TIN THÔNG BÁO CHI TIẾT ==================== -->
+    <!-- ==================== TAB 4: BẢNG TIN THÔNG BÁO ==================== -->
     <div id="tabContent-notices" class="hidden space-y-4">
       <div class="bg-white rounded-3xl p-4 sm:p-6 border border-slate-200/80 shadow-xs">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
@@ -633,7 +594,7 @@
           <i class="fa-solid fa-check-double"></i>
         </div>
         <h3 class="text-xl font-black mb-1">XÁC NHẬN THÀNH CÔNG!</h3>
-        <p class="text-xs text-emerald-100 mb-4">Hệ thống đã tự động cập nhật trạng thái "ĐÃ NỘP" cho thành viên.</p>
+        <p class="text-xs text-emerald-100 mb-4">Trạng thái "ĐÃ NỘP" đã tự động đồng bộ sang tất cả các máy.</p>
         <div class="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
       </div>
 
@@ -643,7 +604,7 @@
             <i class="fa-solid fa-qrcode"></i>
           </div>
           <div>
-            <h3 class="font-extrabold text-slate-900 text-xs sm:text-sm">VietQR Bù Trừ KTX</h3>
+            <h3 class="font-extrabold text-slate-900 text-xs sm:text-sm">VietQR Chuyển Tiền KTX</h3>
           </div>
         </div>
         <button onclick="closeVietQRModal()" class="w-7 h-7 rounded-full bg-slate-100 text-slate-500 hover:text-slate-800 flex items-center justify-center text-xs transition">
@@ -672,7 +633,7 @@
             <button onclick="copyQRTransferText()" class="text-indigo-600 font-bold hover:underline">Sao chép</button>
           </div>
           <div id="qrMemoDisplay" class="font-mono font-black text-indigo-700 bg-white p-1.5 rounded-lg border border-slate-200 text-center text-xs tracking-wider select-all">
-            KTX402 PAY W9X2
+            KTX402 PAY
           </div>
         </div>
       </div>
@@ -683,16 +644,10 @@
           <span>Tôi Đã Chuyển Xong (Cập Nhật Đã Nộp)</span>
         </button>
 
-        <div class="grid grid-cols-2 gap-2">
-          <button type="button" onclick="copyQRTransferText()" class="py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[11px] transition flex items-center justify-center gap-1">
-            <i class="fa-solid fa-copy"></i>
-            <span>Chép số tài khoản</span>
-          </button>
-          <button type="button" onclick="triggerSimulatedBankTransfer()" class="py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 font-bold text-[11px] transition flex items-center justify-center gap-1">
-            <i class="fa-solid fa-wand-magic-sparkles text-amber-600"></i>
-            <span>Test Ting Ting</span>
-          </button>
-        </div>
+        <button type="button" onclick="copyQRTransferText()" class="w-full py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[11px] transition flex items-center justify-center gap-1">
+          <i class="fa-solid fa-copy"></i>
+          <span>Sao chép thông tin tài khoản</span>
+        </button>
       </div>
     </div>
   </div>
@@ -796,7 +751,7 @@
     </div>
   </div>
 
-  <!-- MODAL: SỬA KHOẢN CHI TIÊU ĐÃ GHI -->
+  <!-- MODAL: SỬA KHOẢN CHI TIÊU -->
   <div id="modalEditExpense" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 modal-backdrop hidden">
     <div class="bg-white rounded-3xl max-w-md w-full p-4 sm:p-6 shadow-2xl border border-slate-100 flex flex-col max-h-[92vh]">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100 shrink-0">
@@ -921,7 +876,7 @@
 
       <div class="space-y-3 my-3 text-xs">
         <div class="p-2.5 bg-sky-50 border border-sky-200 rounded-xl text-sky-900 text-[11px]">
-          Hệ thống sẽ tự động cập nhật lịch trực và phát thông báo lên bảng tin phòng để mọi người cùng nắm.
+          Lịch đổi ca sẽ tự động cập nhật ngay tức thì trên tất cả điện thoại của các bạn trong phòng.
         </div>
 
         <div class="grid grid-cols-2 gap-2">
@@ -996,7 +951,7 @@
     </div>
   </div>
 
-  <!-- MODAL: XUẤT BÁO CÁO ZALO / MESSENGER -->
+  <!-- MODAL: XUẤT BÁO CÁO ZALO -->
   <div id="modalShareReport" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 modal-backdrop hidden">
     <div class="bg-white rounded-3xl max-w-md w-full p-4 sm:p-6 shadow-2xl border border-slate-100 flex flex-col max-h-[92vh]">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100 shrink-0">
@@ -1055,7 +1010,7 @@
     </div>
   </div>
 
-  <!-- TOAST THÔNG BÁO TÙY BIẾN -->
+  <!-- TOAST THÔNG BÁO TỰ ĐỘNG -->
   <div id="toastNotification" class="fixed bottom-5 right-5 z-50 bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-xl border border-slate-700/80 flex items-center gap-2.5 transition-all duration-300 transform translate-y-20 opacity-0 pointer-events-none">
     <div id="toastIcon" class="w-6 h-6 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center shrink-0 text-xs">
       <i class="fa-solid fa-check"></i>
@@ -1063,17 +1018,10 @@
     <div class="text-xs font-semibold pr-2" id="toastMessage">Thông báo</div>
   </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
+  <script>
     /* ================================================================= */
-    /* HASHED BUILD VERSION & CHỐNG LƯU BỘ NHỚ ĐỆM (CACHE-BUSTING)      */
+    /* DỮ LIỆU BAN ĐẦU & BIẾN TRẠNG THÁI                                 */
     /* ================================================================= */
-    const LOCAL_BUILD_VERSION = "main.8a7b6c";
-
-    /* STATE KHỞI TẠO */
     const defaultState = {
       roomName: "Phòng 402 - KTX",
       roomCode: "KTX402",
@@ -1113,7 +1061,7 @@
           type: "finance",
           authorName: "Nhật Huy (Trưởng Phòng)",
           title: "Chốt quyết toán tiền điện KTX tháng này",
-          content: "Hóa đơn tiền điện đã lên ở tab Quyết toán, các bạn kiểm tra số dư và chuyển khoản theo mã VietQR trước ngày 28 giúp mình nha.",
+          content: "Hóa đơn tiền điện đã lên ở tab Quyết toán, các bạn kiểm tra số dư và chuyển khoản theo mã VietQR nhé!",
           time: new Date().toLocaleDateString('vi-VN')
         }
       ],
@@ -1160,181 +1108,168 @@
     };
 
     let appData = JSON.parse(JSON.stringify(defaultState));
-    let auth = null;
-    let db = null;
-    let currentUser = null;
-    let currentRoomId = "KTX402";
-    let isSavingToCloud = false;
     let currentNoticeFilter = 'all';
     let isTopNoticeCollapsed = false;
     let currentActiveTab = 'expenses';
     let tempSpinnedMember = null;
     let selectedBillImageBase64 = null;
     let activeQRTransfer = null;
+    let lastLocalSavedTimestamp = 0;
+    let isBroadcasting = false;
 
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('room')) {
-      currentRoomId = urlParams.get('room').toUpperCase().replace(/[^A-Z0-9]/g, '') || "KTX402";
-    }
+    /* KÊNH ĐỒNG BỘ MÂY TỰ ĐỘNG THỜI GIAN THỰC (ZERO-CONFIG) */
+    const CLOUD_SYNC_TOPIC = 'ktx_room_402_master_channel_v1';
+    const LOCAL_CACHE_KEY = 'KTX_AUTO_LOCAL_CACHE_v4';
 
-    function setSyncStatus(isLive, label) {
-      const dot = document.getElementById('stateSyncIndicator');
-      const txt = document.getElementById('stateSyncText');
-      if (dot) dot.className = isLive ? "w-2 h-2 rounded-full bg-emerald-500 animate-pulse" : "w-2 h-2 rounded-full bg-amber-500";
-      if (txt) txt.innerText = label || (isLive ? "Trực tuyến" : "Đang kết nối");
-    }
-
-    /* CLOUD SYNC STATE MANAGEMENT */
-    async function initCloudStateSync() {
-      if (typeof __firebase_config === 'undefined' || !__firebase_config) {
-        setSyncStatus(false, "Ngoại tuyến");
-        return;
-      }
-
+    /* ================================================================= */
+    /* HỆ THỐNG ĐỒNG BỘ NGẦM 100% TỰ ĐỘNG GIỮA TẤT CẢ THIẾT BỊ          */
+    /* ================================================================= */
+    function initAutoCloudEngine() {
+      // 1. Khôi phục từ bộ nhớ tạm máy trước để trang mở tức thì 0ms
       try {
-        const firebaseConfig = JSON.parse(__firebase_config);
-        const app = initializeApp(firebaseConfig);
-        auth = getAuth(app);
-        db = getFirestore(app);
-
-        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-          const cred = await signInWithCustomToken(auth, __initial_auth_token);
-          currentUser = cred.user;
-        } else {
-          const cred = await signInAnonymously(auth);
-          currentUser = cred.user;
+        const cached = localStorage.getItem(LOCAL_CACHE_KEY);
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (parsed && parsed.data) {
+            appData = parsed.data;
+            lastLocalSavedTimestamp = parsed.timestamp || 0;
+          }
         }
+      } catch (e) {}
 
-        if (!currentUser) return;
+      updateUI();
+      renderExpenseInputs();
 
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const roomDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'room_states', currentRoomId);
+      // 2. Tự động lấy ngay bản mới nhất từ Mây thời gian thực khi vừa mở trang
+      pullLatestFromCloud();
 
-        onSnapshot(roomDocRef, (docSnap) => {
-          if (docSnap.exists()) {
-            const data = docSnap.data();
-            if (data && data.statePayload && !isSavingToCloud) {
-              try {
-                const incomingState = JSON.parse(data.statePayload);
-                appData = incomingState;
-                updateUI();
-                renderExpenseInputs();
-                setSyncStatus(true, "Đã khớp 100%");
-              } catch (err) {
-                console.warn("Parse state error:", err);
+      // 3. Kết nối kênh sự kiện trực tiếp (Server-Sent Events) - Nhận dữ liệu tức thì khi máy khác sửa
+      connectLiveEventStream();
+
+      // 4. Tự động kiểm tra lại khi người dùng mở khóa màn hình hoặc quay lại tab
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) {
+          pullLatestFromCloud();
+        }
+      });
+      window.addEventListener('focus', () => {
+        pullLatestFromCloud();
+      });
+
+      // 5. Vòng lặp tự động thăm dò mỗi 6 giây để chống rớt mạng trên điện thoại
+      setInterval(() => {
+        if (!document.hidden && !isBroadcasting) {
+          pullLatestFromCloud();
+        }
+      }, 6000);
+    }
+
+    /* KÉO DỮ LIỆU MỚI TỪ MÂY */
+    async function pullLatestFromCloud() {
+      try {
+        const res = await fetch(`https://ntfy.sh/${CLOUD_SYNC_TOPIC}/json?poll=1&since=24h`, { cache: 'no-store' });
+        if (!res.ok) return;
+        const text = await res.text();
+        if (!text) return;
+
+        const lines = text.trim().split('\n');
+        for (let i = lines.length - 1; i >= 0; i--) {
+          try {
+            const rawMsg = JSON.parse(lines[i]);
+            if (rawMsg && rawMsg.message) {
+              const incoming = JSON.parse(rawMsg.message);
+              if (incoming && incoming.timestamp > lastLocalSavedTimestamp) {
+                applyIncomingState(incoming.data, incoming.timestamp);
+                break;
               }
             }
-          } else {
-            syncCurrentStateToCloud();
-          }
-        }, (err) => {
-          console.warn("Firestore listener error:", err);
-          setSyncStatus(false, "Mất kết nối mây");
-        });
-
-      } catch (err) {
-        console.warn("Init cloud error:", err);
-        setSyncStatus(false, "Ngoại tuyến");
-      }
-    }
-
-    async function syncCurrentStateToCloud() {
-      if (!db || !currentUser) return;
-      try {
-        isSavingToCloud = true;
-        setSyncStatus(true, "Đang lưu mây...");
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const roomDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'room_states', currentRoomId);
-
-        await setDoc(roomDocRef, {
-          roomCode: currentRoomId,
-          statePayload: JSON.stringify(appData),
-          updatedAt: new Date().toISOString(),
-          updatedBy: currentUser.uid
-        });
-
-        setTimeout(() => {
-          isSavingToCloud = false;
-          setSyncStatus(true, "Đã lưu mây");
-        }, 300);
-      } catch (e) {
-        console.warn("Save cloud failed:", e);
-        isSavingToCloud = false;
-        setSyncStatus(false, "Lỗi lưu mây");
-      }
-    }
-
-    /* ================================================================= */
-    /* HASHED CACHE-BUSTING VÀ TỰ ĐỘNG CẬP NHẬT TRÊN THIẾT BỊ KHÁC       */
-    /* ================================================================= */
-    async function checkForServerUpdates() {
-      try {
-        // Gửi HEAD request với Cache-Control cấm cache để lấy bản mới nhất từ server
-        const cacheBusterUrl = `${window.location.pathname}?_hashCheck=${Date.now()}`;
-        const response = await fetch(cacheBusterUrl, {
-          method: 'GET',
-          cache: 'no-store',
-          headers: {
-            'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
-            'Pragma': 'no-cache',
-            'Expires': '0'
-          }
-        });
-
-        if (!response.ok) return;
-
-        const htmlText = await response.text();
-        const match = htmlText.match(/<meta\s+name=["']build-version["']\s+content=["'](.*?)["']/i);
-        const serverBuildVersion = match ? match[1] : null;
-
-        if (serverBuildVersion && serverBuildVersion !== LOCAL_BUILD_VERSION) {
-          const banner = document.getElementById('newVersionBanner');
-          const tag = document.getElementById('newVersionTag');
-          if (tag) tag.innerText = serverBuildVersion;
-          if (banner) banner.classList.remove('hidden');
-
-          showToast(`Phát hiện phiên bản mới: ${serverBuildVersion}!`, "info");
+          } catch (err) {}
         }
-      } catch (err) {
-        console.debug("Check server updates err:", err);
-      }
+      } catch (err) {}
     }
 
-    function dismissNewVersionBanner() {
-      const banner = document.getElementById('newVersionBanner');
-      if (banner) banner.classList.add('hidden');
-    }
-
-    async function forceCleanCacheAndReload() {
-      showToast("Đang xóa bộ nhớ đệm và tải bản mới nhất...", "info");
-
+    /* KẾT NỐI LUỒNG THỜI GIAN THỰC (SSE) */
+    function connectLiveEventStream() {
       try {
-        // 1. Xóa toàn bộ Cache API lưu trữ trong trình duyệt (Service Workers / HTTP Cache)
-        if ('caches' in window) {
-          const cacheKeys = await caches.keys();
-          await Promise.all(cacheKeys.map(key => caches.delete(key)));
-        }
+        const sse = new EventSource(`https://ntfy.sh/${CLOUD_SYNC_TOPIC}/sse`);
+        sse.onmessage = (event) => {
+          try {
+            const raw = JSON.parse(event.data);
+            if (raw && raw.message && !isBroadcasting) {
+              const incoming = JSON.parse(raw.message);
+              if (incoming && incoming.timestamp > lastLocalSavedTimestamp) {
+                applyIncomingState(incoming.data, incoming.timestamp);
+              }
+            }
+          } catch (e) {}
+        };
+        sse.onerror = () => {
+          // Tự động kết nối lại
+        };
+      } catch (e) {}
+    }
 
-        // 2. Hủy các Service Worker đang chạy ngầm
-        if ('serviceWorker' in navigator) {
-          const registrations = await navigator.serviceWorker.getRegistrations();
-          for (const reg of registrations) {
-            await reg.unregister();
-          }
-        }
-      } catch (e) {
-        console.warn("Clean cache error:", e);
+    /* ÁP DỤNG TRẠNG THÁI MỚI VÀO GIAO DIỆN */
+    function applyIncomingState(incomingData, timestamp) {
+      if (!incomingData || !incomingData.members) return;
+      appData = incomingData;
+      lastLocalSavedTimestamp = timestamp;
+
+      // Lưu cache máy
+      try {
+        localStorage.setItem(LOCAL_CACHE_KEY, JSON.stringify({
+          timestamp: lastLocalSavedTimestamp,
+          data: appData
+        }));
+      } catch (e) {}
+
+      updateUI();
+      renderExpenseInputs();
+
+      // Hiệu ứng nhấp nháy báo trạng thái đã nhận dữ liệu mới
+      const dot = document.getElementById('autoSyncDot');
+      if (dot) {
+        dot.classList.add('bg-emerald-300', 'scale-125');
+        setTimeout(() => dot.classList.remove('bg-emerald-300', 'scale-125'), 800);
       }
+    }
 
-      // 3. Tải lại trang với URL tham số ngẫu nhiên ép tải trực tiếp từ server
+    /* TỰ ĐỘNG PHÁT THAY ĐỔI LÊN MÂY CHO MỌI MÁY CÙNG PHÒNG */
+    async function broadcastToAllDevices() {
+      lastLocalSavedTimestamp = Date.now();
+      isBroadcasting = true;
+
+      // Lưu cache cục bộ ngay
+      try {
+        localStorage.setItem(LOCAL_CACHE_KEY, JSON.stringify({
+          timestamp: lastLocalSavedTimestamp,
+          data: appData
+        }));
+      } catch (e) {}
+
+      // Phát lên kênh đồng bộ công cộng
+      try {
+        await fetch(`https://ntfy.sh/${CLOUD_SYNC_TOPIC}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            timestamp: lastLocalSavedTimestamp,
+            data: appData
+          })
+        });
+      } catch (e) {}
+
       setTimeout(() => {
-        const cleanUrl = new URL(window.location.href);
-        cleanUrl.searchParams.set('_forceReload', Date.now().toString());
-        window.location.replace(cleanUrl.toString());
+        isBroadcasting = false;
       }, 500);
     }
 
-    /* HELPER: TÊN & TIỀN TỆ */
+    function saveData() {
+      updateUI();
+      broadcastToAllDevices();
+    }
+
+    /* CÁC HÀM TIỆN ÍCH HIỂN THỊ & ÂM THANH */
     function getShortName(fullName) {
       if (!fullName) return '';
       const clean = fullName.replace(/\(.*?\)/g, '').trim();
@@ -1373,7 +1308,7 @@
       toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
       setTimeout(() => {
         toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
-      }, 3500);
+      }, 3000);
     }
 
     function playSuccessChime() {
@@ -1402,9 +1337,7 @@
         osc2.start(now + 0.1);
         osc1.stop(now + 0.6);
         osc2.stop(now + 0.6);
-      } catch (e) {
-        console.debug("Audio error:", e);
-      }
+      } catch (e) {}
     }
 
     function updateSessionLabels() {
@@ -1417,11 +1350,7 @@
       if (drawerName) drawerName.innerText = name;
     }
 
-    function saveData() {
-      updateUI();
-      syncCurrentStateToCloud();
-    }
-
+    /* TÍNH TOÁN CÔNG NỢ & BÙ TRỪ */
     function computeBalances() {
       const members = appData.members || [];
       const expenses = appData.expenses || [];
@@ -1492,6 +1421,7 @@
       return transfers;
     }
 
+    /* ĐỐI SOÁT & XÁC NHẬN ĐÃ NỘP */
     function toggleTransferPaidStatus(transferKey, fromName, toName, amount) {
       if (!appData.settledTransfers) appData.settledTransfers = {};
       const isPaid = !!appData.settledTransfers[transferKey];
@@ -1515,7 +1445,7 @@
           type: 'finance',
           authorName: fromName,
           title: `✅ ${fromName} đã nộp ${formatVND(amount)} cho ${toName}`,
-          content: `${fromName} đã chuyển tiền bù trừ ${formatVND(amount)} cho ${toName} thành công. Trạng thái đã được cập nhật tự động!`,
+          content: `${fromName} đã chuyển tiền bù trừ ${formatVND(amount)} cho ${toName} thành công. Trạng thái đã tự động cập nhật lên tất cả các máy!`,
           time: new Date().toLocaleDateString('vi-VN')
         };
         if (!appData.notices) appData.notices = [];
@@ -1560,6 +1490,7 @@
       showToast(nextState ? `Đã đổi trạng thái của ${shortName} thành "Đã nộp"!` : `Đã chuyển về "Chưa nộp" cho ${shortName}`);
     }
 
+    /* VIETQR MODAL */
     function openVietQRModal(fromMemberId, toMemberId, amount) {
       const fromMem = (appData.members || []).find(m => m.id === fromMemberId);
       const toMem = (appData.members || []).find(m => m.id === toMemberId);
@@ -1569,9 +1500,7 @@
       const toName = getShortName(toMem.name);
       const bank = toMem.bank || 'MB';
       const account = toMem.account || '';
-      
-      const randomSuffix = Math.random().toString(36).substring(2, 6).toUpperCase();
-      const memo = `KTX402 PAY ${randomSuffix}`.trim();
+      const memo = `KTX402 PAY ${Math.random().toString(36).substring(2, 6).toUpperCase()}`.trim();
 
       activeQRTransfer = {
         fromId: fromMemberId,
@@ -1616,13 +1545,6 @@
       closeModal('modalVietQR');
     }
 
-    function triggerSimulatedBankTransfer() {
-      showToast("Mô phỏng app ngân hàng chuyển tiền thành công...", "info");
-      setTimeout(() => {
-        confirmQRPaymentSuccess();
-      }, 1000);
-    }
-
     function confirmQRPaymentSuccess() {
       if (!activeQRTransfer) return;
 
@@ -1647,7 +1569,7 @@
         type: 'finance',
         authorName: fromName,
         title: `✅ ${fromName} đã thanh toán ${formatVND(amount)} cho ${toName}`,
-        content: `Giao dịch chuyển tiền ${formatVND(amount)} đã được ghi nhận thành công. Trạng thái "ĐÃ NỘP" đã kích hoạt!`,
+        content: `Giao dịch chuyển tiền ${formatVND(amount)} đã được ghi nhận. Trạng thái "ĐÃ NỘP" đã tự động đồng bộ sang tất cả các máy!`,
         time: new Date().toLocaleDateString('vi-VN')
       };
       if (!appData.notices) appData.notices = [];
@@ -1670,6 +1592,17 @@
       }, 1200);
     }
 
+    function copyQRTransferText() {
+      if (!activeQRTransfer) return;
+      const { toName, amount, memo } = activeQRTransfer;
+      const mem = (appData.members || []).find(m => m.name.includes(toName) || getShortName(m.name) === toName);
+      const bank = mem ? `${mem.bank} - ${mem.account}` : '';
+      const text = `Chuyển khoản KTX:\n👤 Người nhận: ${toName}\n🏦 STK: ${bank}\n💰 Số tiền: ${formatVND(amount)}\n📝 Nội dung: ${memo}`;
+      copyToClipboard(text);
+      showToast("Đã sao chép thông tin tài khoản!");
+    }
+
+    /* RENDER BẢNG QUYẾT TOÁN */
     function renderSettlement() {
       const mobileContainer = document.getElementById('settlementMobileList');
       const desktopTbody = document.getElementById('settlementTableBody');
@@ -1878,6 +1811,7 @@
       }
     }
 
+    /* ĐIỀU HƯỚNG TAB & MENU */
     function toggleSidebar(show) {
       const overlay = document.getElementById('sidebarOverlay');
       const drawer = document.getElementById('sidebarDrawer');
@@ -2331,7 +2265,7 @@
       if (badge) badge.innerText = `${expenses.length} khoản`;
 
       if (expenses.length === 0) {
-        const emptyMsg = `<div class="p-8 text-center text-slate-400 text-xs">Chưa có khoản chi nào được ghi nhận. Hãy bấm thêm khoản chi mới ở trên!</div>`;
+        const emptyMsg = `<div class="p-8 text-center text-slate-400 text-xs">Chưa có khoản chi nào được ghi nhận. Hãy thêm ở trên!</div>`;
         if (mobileContainer) mobileContainer.innerHTML = emptyMsg;
         if (desktopTbody) desktopTbody.innerHTML = `<tr><td colspan="6">${emptyMsg}</td></tr>`;
         return;
@@ -2507,6 +2441,7 @@
       showToast("Đã xóa khoản chi!");
     }
 
+    /* QUÉT BILL AI */
     function openScanBillModal() {
       selectedBillImageBase64 = null;
       document.getElementById('billScanPreviewContainer').classList.add('hidden');
@@ -2558,7 +2493,7 @@
         document.getElementById('aiExpenseName').value = randomPreset.name;
         document.getElementById('aiExpenseAmount').value = randomPreset.amount;
         document.getElementById('aiExpenseCategory').value = randomPreset.category;
-      }, 1600);
+      }, 1400);
     }
 
     function toggleAIBeneficiaries() {
@@ -2614,17 +2549,7 @@
       showToast(`Đã tạo khoản chi từ hóa đơn: ${name}!`, "success");
     }
 
-    function copyQRTransferText() {
-      const rec = document.getElementById('qrReceiverName')?.innerText || '';
-      const bank = document.getElementById('qrBankDetail')?.innerText || '';
-      const amt = document.getElementById('qrAmountDisplay')?.innerText || '';
-      const memo = document.getElementById('qrMemoDisplay')?.innerText || '';
-
-      const text = `Chuyển khoản KTX:\n👤 Người nhận: ${rec}\n🏦 Ngân hàng: ${bank}\n💰 Số tiền: ${amt}\n📝 Nội dung: ${memo}`;
-      copyToClipboard(text);
-      showToast("Đã sao chép thông tin chuyển khoản!", "success");
-    }
-
+    /* BÁO CÁO ZALO */
     function openShareReportModal() {
       const textarea = document.getElementById('shareReportTextarea');
       const room = appData.roomName || 'Phòng 402 - KTX';
@@ -2646,7 +2571,9 @@
         transfers.forEach((t, i) => {
           const f = members.find(m => m.id === t.fromId);
           const to = members.find(m => m.id === t.toId);
-          txt += `${i + 1}. ${getShortName(f?.name)} ➡️ chuyển ${formatVND(t.amount)} cho ${getShortName(to?.name)} (${to?.bank} - ${to?.account || ''})\n`;
+          const transferKey = `${t.fromId}_to_${t.toId}`;
+          const isDone = !!(appData.settledTransfers && appData.settledTransfers[transferKey]);
+          txt += `${i + 1}. ${getShortName(f?.name)} ➡️ chuyển ${formatVND(t.amount)} cho ${getShortName(to?.name)} (${to?.bank} - ${to?.account || ''}) ${isDone ? '[ĐÃ NỘP]' : '[CHƯA NỘP]'}\n`;
         });
       }
 
@@ -2664,6 +2591,7 @@
       }
     }
 
+    /* LỊCH TRỰC NHẬT & CHECKLIST */
     function renderCleaningSchedule() {
       const grid = document.getElementById('weeklyDutyGrid');
       const selectDay = document.getElementById('swapDaySelect');
@@ -2749,7 +2677,7 @@
       }
 
       saveData();
-      showToast(s.done ? `Đã đánh dấu hoàn thành ca ${s.dayName}!` : `Đã bỏ hoàn thành ca ${s.dayName}`);
+      showToast(s.done ? `Đã hoàn thành ca ${s.dayName}!` : `Đã hủy hoàn thành ca ${s.dayName}`);
     }
 
     function openSwapDutyModal(dayIndex) {
@@ -2870,21 +2798,7 @@
       `).join('');
     }
 
-    function openAddChecklistModal() {
-      const title = prompt("Nhập tên hạng mục vệ sinh cần làm:");
-      if (!title) return;
-      const desc = prompt("Nhập hướng dẫn chi tiết:") || "";
-      if (!appData.checklistTasks) appData.checklistTasks = [];
-      appData.checklistTasks.push({
-        id: 't_' + Date.now(),
-        emoji: '🧹',
-        title,
-        desc
-      });
-      saveData();
-      showToast("Đã thêm hạng mục kiểm tra vệ sinh mới!", "success");
-    }
-
+    /* QUẢN LÝ THÀNH VIÊN */
     function renderMembersList() {
       const container = document.getElementById('membersListContainer');
       if (!container) return;
@@ -2975,6 +2889,7 @@
       showToast("Đã xóa thành viên!");
     }
 
+    /* ĐỔI TÊN PHÒNG & SAO LƯU */
     function openRoomSettingsModal() {
       const input = document.getElementById('inputNewRoomTitle');
       if (input) input.value = appData.roomName || "Phòng 402 - KTX";
@@ -3021,98 +2936,14 @@
       textArea.select();
       try {
         document.execCommand('copy');
-      } catch (err) {
-        console.warn('Fallback copy error:', err);
-      }
+      } catch (err) {}
       document.body.removeChild(textArea);
     }
 
-    /* GÁN TOÀN BỘ HÀM VÀO WINDOW SCOPE */
-    Object.assign(window, {
-      getShortName,
-      getNameInitial,
-      toggleSidebar,
-      selectTabFromSidebar,
-      switchTab,
-      toggleTopNoticeBanner,
-      openModal,
-      closeModal,
-      filterNotices,
-      openCreateNoticeModal,
-      handleSaveNotice,
-      deleteNotice,
-      shareNoticeToGroup,
-      setQuickExpense,
-      updateAmountPreview,
-      toggleAllBeneficiaries,
-      handleSaveExpense,
-      openEditExpenseModal,
-      toggleEditBeneficiaries,
-      handleSaveEditedExpense,
-      deleteExpense,
-      openScanBillModal,
-      handleBillImageSelected,
-      toggleAIBeneficiaries,
-      confirmAICreatedExpense,
-      openVietQRModal,
-      closeVietQRModal,
-      triggerSimulatedBankTransfer,
-      confirmQRPaymentSuccess,
-      playSuccessChime,
-      copyQRTransferText,
-      openShareReportModal,
-      copyReportTextToClipboard,
-      handleDutyCheckToggle,
-      openSwapDutyModal,
-      executeSwapDuty,
-      regenerateSchedule,
-      openSpinWheelModal,
-      startSpinningWheel,
-      assignSpinnedPersonToToday,
-      openAddChecklistModal,
-      openAddMemberModal,
-      openEditMemberModal,
-      handleSaveMember,
-      removeMember,
-      openRoomSettingsModal,
-      saveNewRoomTitle,
-      exportDataJson,
-      toggleTransferPaidStatus,
-      toggleMemberPaidStatus,
-      checkForServerUpdates,
-      forceCleanCacheAndReload,
-      dismissNewVersionBanner
+    /* KHỞI ĐỘNG ỨNG DỤNG */
+    window.addEventListener('DOMContentLoaded', () => {
+      initAutoCloudEngine();
     });
-
-    /* APP BOOTSTRAP */
-    function startApp() {
-      updateSessionLabels();
-      renderExpenseInputs();
-      updateUI();
-      switchTab('expenses');
-      initCloudStateSync();
-
-      // Kiểm tra bản cập nhật mới ngay khi mở ứng dụng
-      checkForServerUpdates();
-    }
-
-    // Tự động kiểm tra bản cập nhật khi người dùng quay lại tab hoặc mở khóa màn hình điện thoại
-    document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'visible') {
-        checkForServerUpdates();
-      }
-    });
-
-    // Lắng nghe sự kiện cửa sổ nhận lại tiêu điểm (window focus)
-    window.addEventListener('focus', () => {
-      checkForServerUpdates();
-    });
-
-    if (document.readyState === 'loading') {
-      window.addEventListener('DOMContentLoaded', startApp);
-    } else {
-      startApp();
-    }
   </script>
 </body>
 </html>
