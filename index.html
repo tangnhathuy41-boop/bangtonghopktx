@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <!-- Thẻ Meta cấm lưu bộ nhớ đệm (Cache-Control) cho GitHub Pages -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
@@ -14,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <!-- Font Awesome 6 -->
+  <!-- Font Awesome 6 Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <script>
@@ -38,8 +39,8 @@
       -webkit-tap-highlight-color: transparent;
     }
     .modal-backdrop {
-      background-color: rgba(15, 23, 42, 0.65);
-      backdrop-filter: blur(4px);
+      background-color: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(5px);
     }
     .no-scrollbar::-webkit-scrollbar {
       display: none;
@@ -66,11 +67,11 @@
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col antialiased selection:bg-indigo-100 selection:text-indigo-700">
 
-  <!-- HEADER / NAVBAR -->
+  <!-- HEADER / NAVBAR CHÍNH -->
   <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200/80 px-3 sm:px-6 py-2.5 shadow-xs">
     <div class="max-w-6xl mx-auto flex items-center justify-between gap-1.5 sm:gap-4">
       
-      <!-- Cột Trái: Nút Menu + Tên Phòng KTX -->
+      <!-- Cột Trái: Nút Mở Menu Sidebar & Tên Phòng KTX -->
       <div class="flex items-center gap-1.5 sm:gap-3 min-w-0">
         <button onclick="toggleSidebar(true)" class="p-2 text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition shrink-0" title="Mở danh mục menu">
           <i class="fa-solid fa-bars text-lg"></i>
@@ -91,29 +92,35 @@
           </div>
         </button>
 
-        <!-- Huy hiệu trạng thái đồng bộ mây -->
+        <!-- Huy hiệu trạng thái kết nối đám mây -->
         <div id="cloudSyncBadge" class="hidden xs:flex items-center gap-1.5 px-2 py-0.5 rounded-lg text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 shrink-0" title="Trạng thái kết nối mây đa thiết bị">
           <span id="cloudSyncDot" class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
           <span id="cloudSyncText">Đang đồng bộ Live</span>
         </div>
       </div>
 
-      <!-- Cột Phải: Các nút Quét Bill AI + Chia Sẻ Báo Cáo Zalo -->
+      <!-- Cột Phải: Các nút Quét Bill AI, Trung tâm đồng bộ, Tải bản mới -->
       <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
-        <!-- Nút Đồng Bộ Đa Thiết Bị (Quét QR mở trên điện thoại / máy tính khác) -->
-        <button onclick="openDeviceSyncModal()" class="flex items-center gap-1.5 text-xs font-bold px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs transition shrink-0" title="Đồng bộ tự động lên điện thoại & các thiết bị khác">
+        <!-- Nút Tải Bản Mới Bỏ Cache (Chống dính bản lưu cũ trên thiết bị khác) -->
+        <button onclick="forceReloadLatest()" class="flex items-center gap-1 text-[11px] font-bold px-2 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 transition shrink-0 shadow-2xs" title="Bấm nếu thấy máy khác chưa cập nhật giao diện mới">
+          <i class="fa-solid fa-rotate text-amber-600"></i>
+          <span class="hidden md:inline">Tải bản mới</span>
+        </button>
+
+        <!-- Nút Trung tâm đồng bộ đa thiết bị -->
+        <button onclick="openDeviceSyncModal()" class="flex items-center gap-1.5 text-xs font-bold px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs transition shrink-0" title="Trung tâm đồng bộ dữ liệu đa thiết bị">
           <i class="fa-solid fa-tower-broadcast animate-pulse text-xs"></i>
-          <span class="inline">Đồng bộ thiết bị</span>
+          <span class="inline">Đồng bộ</span>
         </button>
 
         <!-- Nút Quét Bill AI -->
         <button onclick="openScanBillModal()" class="flex items-center gap-1.5 text-xs font-bold px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 text-white shadow-xs hover:opacity-95 transition shrink-0" title="Quét hóa đơn tự động bằng AI">
           <i class="fa-solid fa-camera text-xs"></i>
-          <span class="hidden xs:inline">Quét Bill AI</span>
+          <span class="hidden xs:inline">Quét Bill</span>
         </button>
 
-        <!-- Nút Chia sẻ Zalo -->
-        <button onclick="openShareReportModal()" class="flex items-center gap-1.5 text-xs font-bold px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white shadow-xs transition shrink-0" title="Xuất báo cáo gửi nhóm Zalo/Messenger">
+        <!-- Nút Báo cáo Zalo -->
+        <button onclick="openShareReportModal()" class="flex items-center gap-1.5 text-xs font-bold px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white shadow-xs transition shrink-0" title="Xuất báo cáo gửi nhóm Zalo/Messenger">
           <i class="fa-solid fa-share-nodes text-xs"></i>
           <span class="hidden xs:inline">Zalo</span>
         </button>
@@ -122,10 +129,10 @@
     </div>
   </header>
 
-  <!-- SIDEBAR MENU DRAWER (Trượt từ trái sang) -->
+  <!-- SIDEBAR MENU DRAWER (Trượt mượt mà từ trái sang) -->
   <div id="sidebarOverlay" onclick="toggleSidebar(false)" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs transition-opacity opacity-0 pointer-events-none duration-300"></div>
   <aside id="sidebarDrawer" class="fixed top-0 left-0 bottom-0 z-50 w-72 sm:w-80 bg-white shadow-2xl flex flex-col transform -translate-x-full transition-transform duration-300 ease-in-out border-r border-slate-200">
-    <!-- Header Drawer -->
+    <!-- Tiêu đề Drawer -->
     <div class="p-4 border-b border-slate-100 flex items-center justify-between">
       <div class="flex items-center gap-2.5">
         <div class="w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-black text-sm">
@@ -141,11 +148,11 @@
       </button>
     </div>
 
-    <!-- Thông tin phòng đang kết nối -->
+    <!-- Thông tin phòng và mã bảo mật -->
     <div class="p-3.5 bg-gradient-to-br from-indigo-50/80 via-white to-teal-50/80 border-b border-indigo-100">
       <div class="flex items-center justify-between gap-2 mb-1.5">
         <div class="min-w-0">
-          <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Phòng đang mở</div>
+          <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Phòng hiện tại</div>
           <div id="drawerRoomNameLabel" class="font-extrabold text-slate-900 text-sm truncate">Phòng 402 - KTX</div>
           <div class="text-[11px] text-indigo-700 font-mono font-bold">Mã: <span id="drawerRoomCodeLabel">KTX402</span></div>
         </div>
@@ -156,20 +163,20 @@
       <div class="flex items-center justify-between text-[11px] text-slate-500 pt-1.5 border-t border-slate-200/60">
         <span class="flex items-center gap-1.5">
           <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-          <span id="cloudSyncDrawerStatus">Đã kết nối mây đa thiết bị</span>
+          <span id="cloudSyncDrawerStatus">Đã kết nối mây</span>
         </span>
         <span id="drawerUserRoleLabel" class="font-semibold text-indigo-700 truncate max-w-[110px]">Huy</span>
       </div>
     </div>
 
-    <!-- Danh sách các tab chức năng trong Menu -->
+    <!-- Danh sách các chức năng chính (Điều hướng sidebar) -->
     <div class="p-3 space-y-1.5 flex-grow overflow-y-auto">
       <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-1">Chức Năng Chính</div>
 
       <button onclick="selectTabFromSidebar('expenses')" id="navExpenseBtn" class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold bg-indigo-600 text-white transition">
         <div class="flex items-center gap-2.5">
           <i class="fa-solid fa-receipt w-4 text-center"></i>
-          <span>Khoản Chi Phòng</span>
+          <span>Khoản Chi Tiêu Phòng</span>
         </div>
         <span id="sidebarExpenseBadge" class="px-1.5 py-0.5 rounded-full text-[10px] bg-white/20 text-white font-extrabold">3</span>
       </button>
@@ -177,9 +184,9 @@
       <button onclick="selectTabFromSidebar('settlement')" id="navSettlementBtn" class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition">
         <div class="flex items-center gap-2.5">
           <i class="fa-solid fa-scale-balanced w-4 text-center text-teal-600"></i>
-          <span>Quyết Toán & VietQR</span>
+          <span>Quyết Toán & VietQR Tự Động</span>
         </div>
-        <span class="text-[10px] text-teal-600 font-extrabold">Chi tiết</span>
+        <span class="text-[10px] text-teal-600 font-extrabold">Đối soát</span>
       </button>
 
       <button onclick="selectTabFromSidebar('duty')" id="navDutyBtn" class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition">
@@ -193,7 +200,7 @@
       <button onclick="selectTabFromSidebar('notices')" id="navNoticeBtn" class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition">
         <div class="flex items-center gap-2.5">
           <i class="fa-solid fa-bullhorn w-4 text-center text-amber-500"></i>
-          <span>Bảng Thông Báo Phòng</span>
+          <span>Bảng Tin Phòng KTX</span>
         </div>
         <span id="sidebarNoticeBadge" class="px-1.5 py-0.5 rounded-full text-[10px] bg-amber-100 text-amber-800 font-extrabold">3</span>
       </button>
@@ -206,12 +213,13 @@
         <span id="sidebarMemberCountBadge" class="px-1.5 py-0.5 rounded-full text-[10px] bg-slate-100 text-slate-700 font-extrabold">6</span>
       </button>
 
+      <!-- Mục Cài đặt & Tiện ích -->
       <div class="pt-3 border-t border-slate-100 mt-2">
-        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-1">Cài Đặt & Dữ Liệu</div>
+        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-1">Cài Đặt & Đồng Bộ</div>
 
-        <button onclick="toggleSidebar(false); openSePayConfigModal();" class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold text-teal-700 bg-teal-50 hover:bg-teal-100 transition">
-          <i class="fa-solid fa-bolt text-teal-600 w-4 text-center"></i>
-          <span>Cấu Hình Tự Động VietQR</span>
+        <button onclick="toggleSidebar(false); openDeviceSyncModal();" class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 transition">
+          <i class="fa-solid fa-tower-broadcast w-4 text-center text-emerald-600"></i>
+          <span>Trung Tâm Đồng Bộ Thiết Bị</span>
         </button>
 
         <button onclick="toggleSidebar(false); openRoomSettingsModal();" class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 transition mt-1">
@@ -219,8 +227,13 @@
           <span>Đổi Tên Phòng KTX</span>
         </button>
 
-        <button onclick="toggleSidebar(false); forceReloadLatest();" class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-amber-700 bg-amber-50 hover:bg-amber-100 transition mt-1">
-          <i class="fa-solid fa-rotate w-4 text-center"></i>
+        <button onclick="toggleSidebar(false); openSePayConfigModal();" class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 transition mt-1">
+          <i class="fa-solid fa-bolt w-4 text-center text-amber-500"></i>
+          <span>Cấu Hình Tự Động VietQR</span>
+        </button>
+
+        <button onclick="toggleSidebar(false); forceReloadLatest();" class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-amber-800 bg-amber-50 hover:bg-amber-100 transition mt-1">
+          <i class="fa-solid fa-rotate w-4 text-center text-amber-600"></i>
           <span>Làm Mới Bỏ Cache (Tải Bản Mới)</span>
         </button>
 
@@ -232,14 +245,14 @@
     </div>
 
     <div class="p-3 border-t border-slate-100 text-center text-[10px] text-slate-400">
-      Bản cập nhật v3.5 • Quản lý phòng KTX
+      KTX Pro v4.0 • Tự động đồng bộ đa thiết bị
     </div>
   </aside>
 
   <!-- MAIN CONTAINER -->
   <main class="max-w-6xl w-full mx-auto p-3 sm:p-6 space-y-4 flex-grow">
 
-    <!-- BẢNG THÔNG BÁO PHÒNG (Dạng thu gọn, có thể đóng mở) -->
+    <!-- BẢNG THÔNG BÁO PHÒNG (Dạng thu gọn, có thể đóng mở nhanh) -->
     <section id="topNoticeCard" class="bg-gradient-to-r from-amber-50/90 via-orange-50/70 to-rose-50/80 border border-amber-200/90 rounded-2xl p-2.5 sm:p-3 shadow-xs transition-all">
       <div class="flex items-center justify-between gap-2 cursor-pointer select-none" onclick="toggleTopNoticeBanner()">
         <div class="flex items-center gap-2 min-w-0">
@@ -260,7 +273,7 @@
             <span class="hidden xs:inline">Đăng tin</span>
           </button>
           <button onclick="switchTab('notices')" class="px-2 py-1 rounded-lg bg-white hover:bg-amber-100 text-amber-800 border border-amber-200 text-[11px] font-bold transition">
-            Xem tất cả
+            Chi tiết
           </button>
           <button onclick="toggleTopNoticeBanner()" id="btnToggleNoticeIcon" class="w-7 h-7 rounded-lg bg-white/80 hover:bg-white text-slate-600 flex items-center justify-center text-xs transition border border-amber-200/60" title="Thu gọn / Mở rộng">
             <i class="fa-solid fa-chevron-up"></i>
@@ -268,7 +281,7 @@
         </div>
       </div>
 
-      <!-- Danh sách thông báo dạng thanh mỏng -->
+      <!-- Danh sách thông báo dạng dải mỏng -->
       <div id="noticeBannerContent" class="mt-2.5 pt-2 border-t border-amber-200/60 space-y-1.5">
         <div id="topNoticeList" class="space-y-1.5 max-h-48 overflow-y-auto pr-0.5">
           <!-- Dynamic entries -->
@@ -276,7 +289,30 @@
       </div>
     </section>
 
-    <!-- KHỐI THỐNG KÊ CHI TIẾT (Hiển thị khi ở tab Thông Báo) -->
+    <!-- THANH THỐNG KÊ GỌN GÀNG (Nhấn vào là tự chuyển tab tức thì) -->
+    <div id="compactStatsStrip" class="bg-white border border-slate-200/80 rounded-2xl p-2 sm:p-2.5 shadow-xs flex items-center justify-between text-xs divide-x divide-slate-100 overflow-x-auto no-scrollbar">
+      <button onclick="switchTab('expenses')" class="px-2.5 py-1 text-left min-w-0 hover:text-indigo-600 transition shrink-0">
+        <div class="text-[10px] text-slate-400 font-semibold">Tổng chi tiêu</div>
+        <div id="compactTotalExpense" class="font-bold text-slate-800 text-xs whitespace-nowrap">145.000&nbsp;₫</div>
+      </button>
+
+      <button onclick="switchTab('settlement')" class="px-2.5 py-1 text-left min-w-0 hover:text-indigo-600 transition shrink-0">
+        <div class="text-[10px] text-slate-400 font-semibold">Bình quân / bạn</div>
+        <div id="compactAvgExpense" class="font-bold text-indigo-600 text-xs whitespace-nowrap">24.167&nbsp;₫</div>
+      </button>
+
+      <button onclick="switchTab('duty')" class="px-2.5 py-1 text-left min-w-0 hover:text-indigo-600 transition shrink-0">
+        <div class="text-[10px] text-slate-400 font-semibold">Trực hôm nay</div>
+        <div id="compactTodayDuty" class="font-bold text-emerald-600 text-xs truncate max-w-[90px]">Huy</div>
+      </button>
+
+      <button onclick="switchTab('settlement')" class="px-2.5 py-1 text-left min-w-0 hover:text-indigo-600 transition shrink-0">
+        <div class="text-[10px] text-slate-400 font-semibold">Lệnh bù trừ</div>
+        <div id="compactTransfers" class="font-bold text-teal-600 text-xs whitespace-nowrap">4 lệnh</div>
+      </button>
+    </div>
+
+    <!-- KHỐI THỐNG KÊ ĐẦY ĐỦ (Chỉ hiển thị khi mở tab Thông Báo) -->
     <div id="fullStatsContainer" class="hidden grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4">
       <div class="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200/80 shadow-xs">
         <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Tổng chi tiêu</div>
@@ -303,72 +339,7 @@
       </div>
     </div>
 
-    <!-- THANH THỐNG KÊ COMPACT THU NHỎ (Dành cho việc điều hướng nhanh giữa các mục) -->
-    <div id="compactStatsStrip" class="bg-white border border-slate-200/80 rounded-2xl p-2 sm:p-2.5 shadow-xs flex items-center justify-between text-xs divide-x divide-slate-100 overflow-x-auto no-scrollbar">
-      <button onclick="switchTab('expenses')" class="px-2.5 py-1 text-left min-w-0 hover:text-indigo-600 transition shrink-0">
-        <div class="text-[10px] text-slate-400 font-semibold">Tổng chi phòng</div>
-        <div id="compactTotalExpense" class="font-bold text-slate-800 text-xs whitespace-nowrap">145.000&nbsp;₫</div>
-      </button>
-
-      <button onclick="switchTab('settlement')" class="px-2.5 py-1 text-left min-w-0 hover:text-indigo-600 transition shrink-0">
-        <div class="text-[10px] text-slate-400 font-semibold">Bình quân / người</div>
-        <div id="compactAvgExpense" class="font-bold text-indigo-600 text-xs whitespace-nowrap">24.167&nbsp;₫</div>
-      </button>
-
-      <button onclick="switchTab('duty')" class="px-2.5 py-1 text-left min-w-0 hover:text-indigo-600 transition shrink-0">
-        <div class="text-[10px] text-slate-400 font-semibold">Trực hôm nay</div>
-        <div id="compactTodayDuty" class="font-bold text-emerald-600 text-xs truncate max-w-[90px]">Huy</div>
-      </button>
-
-      <button onclick="switchTab('settlement')" class="px-2.5 py-1 text-left min-w-0 hover:text-indigo-600 transition shrink-0">
-        <div class="text-[10px] text-slate-400 font-semibold">Lệnh bù trừ</div>
-        <div id="compactTransfers" class="font-bold text-teal-600 text-xs whitespace-nowrap">4 lệnh</div>
-      </button>
-
-      <button onclick="switchTab('members')" class="px-2.5 py-1 text-left min-w-0 hover:text-indigo-600 transition shrink-0">
-        <div class="text-[10px] text-slate-400 font-semibold">Thành viên</div>
-        <div class="font-bold text-indigo-700 text-xs whitespace-nowrap flex items-center gap-1">
-          <i class="fa-solid fa-users text-[10px]"></i>
-          <span>Xem STK</span>
-        </div>
-      </button>
-    </div>
-
-    <!-- ==================== TAB 1: BẢNG THÔNG BÁO CHI TIẾT ==================== -->
-    <div id="tabContent-notices" class="hidden space-y-4">
-      <div class="bg-white rounded-3xl p-4 sm:p-6 border border-slate-200/80 shadow-xs">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
-          <div>
-            <h3 class="font-extrabold text-slate-900 text-base flex items-center gap-2">
-              <i class="fa-solid fa-bullhorn text-amber-500"></i>
-              <span>Bảng Tin Phòng KTX</span>
-            </h3>
-            <p class="text-xs text-slate-400">Xem và đăng tin tức, lịch kiểm tra phòng hoặc lý do xin đổi ca trực</p>
-          </div>
-          <div class="flex items-center gap-2">
-            <button onclick="openCreateNoticeModal()" class="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-xs transition flex items-center gap-1.5">
-              <i class="fa-solid fa-pen-to-square"></i>
-              <span>Đăng Tin Mới</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Bộ lọc thông báo -->
-        <div class="flex items-center gap-2 my-3 overflow-x-auto no-scrollbar text-xs font-semibold">
-          <button onclick="filterNotices('all')" id="noticeFilter-all" class="px-3 py-1.5 rounded-xl bg-slate-900 text-white">Tất cả</button>
-          <button onclick="filterNotices('swap')" id="noticeFilter-swap" class="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200">Đổi ca</button>
-          <button onclick="filterNotices('urgent')" id="noticeFilter-urgent" class="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200">Khẩn cấp / Kiểm tra</button>
-          <button onclick="filterNotices('finance')" id="noticeFilter-finance" class="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200">Chi tiêu / Quỹ</button>
-        </div>
-
-        <!-- Danh sách bài đăng thông báo -->
-        <div id="fullNoticesContainer" class="space-y-3">
-          <!-- Dynamic entries -->
-        </div>
-      </div>
-    </div>
-
-    <!-- ==================== TAB 2: KHOẢN CHI TIÊU PHÒNG ==================== -->
+    <!-- ==================== TAB 1: KHOẢN CHI TIÊU PHÒNG ==================== -->
     <div id="tabContent-expenses" class="space-y-4">
       
       <!-- Form Thêm Khoản Chi Mới -->
@@ -407,7 +378,7 @@
             </div>
           </div>
 
-          <!-- Chọn nhanh các món thường mua -->
+          <!-- Gợi ý nhanh các món sinh hoạt hay mua -->
           <div>
             <span class="text-[11px] font-bold text-slate-400 mr-2">Gợi ý nhanh:</span>
             <div class="inline-flex flex-wrap gap-1.5 mt-1">
@@ -458,7 +429,7 @@
         </form>
       </div>
 
-      <!-- Lịch Sử Các Khoản Chi Đã Ghi -->
+      <!-- Lịch Sử Chi Tiêu (Card View trên Mobile, Bảng trên Desktop) -->
       <div class="bg-white rounded-3xl p-4 sm:p-6 border border-slate-200/80 shadow-xs">
         <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-100">
           <div>
@@ -495,7 +466,7 @@
 
     </div>
 
-    <!-- ==================== TAB 3: QUYẾT TOÁN CÔNG NỢ & VIETQR ==================== -->
+    <!-- ==================== TAB 2: QUYẾT TOÁN CÔNG NỢ & VIETQR ==================== -->
     <div id="tabContent-settlement" class="hidden space-y-4">
       
       <!-- Lộ Trình Chuyển Tiền Bù Trừ Tối Ưu -->
@@ -504,7 +475,7 @@
           <div>
             <h3 class="font-extrabold text-base flex items-center gap-2">
               <i class="fa-solid fa-route text-teal-400"></i>
-              <span>Lộ Trình Chuyển Tiền Bù Trừ</span>
+              <span>Lộ Trình Chuyển Tiền Bù Trừ Tối Ưu</span>
             </h3>
             <p class="text-xs text-slate-300">Thuật toán giảm số lần chuyển khoản giữa các thành viên</p>
           </div>
@@ -515,25 +486,20 @@
         </div>
 
         <div id="optimalTransfersList" class="space-y-2.5">
-          <!-- Dynamic Transfer Cards -->
+          <!-- Dynamic Transfer Cards with VietQR & Auto Status Toggle -->
         </div>
       </div>
 
-      <!-- Bảng Đối Soát Quyết Toán Từng Bạn (Card trên Mobile, Table trên Máy tính) -->
+      <!-- Bảng Đối Soát Quyết Toán Từng Bạn (Tự động hiển thị Đã Nộp / Đã Nhận Đủ) -->
       <div class="bg-white rounded-3xl p-4 sm:p-6 border border-slate-200/80 shadow-xs">
-        <div class="pb-3 mb-3 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div class="pb-3 mb-3 border-b border-slate-100 flex items-center justify-between">
           <div>
             <h3 class="font-extrabold text-slate-900 text-sm sm:text-base">Đối Soát Chi Tiêu Từng Bạn</h3>
-            <p class="text-[11px] text-slate-400">Trạng thái sẽ tự động đổi sang "Đã nộp" khi bạn bấm xác nhận hoặc thanh toán</p>
+            <p class="text-[11px] text-slate-400">Tự động cập nhật nhãn "ĐÃ NỘP" khi chuyển khoản qua VietQR</p>
           </div>
-          <div class="text-[11px] font-bold text-slate-500 flex items-center gap-2">
-            <span class="inline-flex items-center gap-1 text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
-              <i class="fa-solid fa-circle-check"></i> Đã nộp
-            </span>
-            <span class="inline-flex items-center gap-1 text-rose-700 bg-rose-50 px-2 py-0.5 rounded-md border border-rose-200">
-              <i class="fa-solid fa-clock"></i> Chưa nộp
-            </span>
-          </div>
+          <span class="text-[10px] font-bold px-2 py-1 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200">
+            <i class="fa-solid fa-bolt mr-1"></i>Tự động hóa
+          </span>
         </div>
 
         <!-- Dạng thẻ Card trên Mobile -->
@@ -551,7 +517,7 @@
                 <th class="py-3 px-3 text-right">Phần chịu (-)</th>
                 <th class="py-3 px-3 text-right">Chênh lệch</th>
                 <th class="py-3 px-3 text-center">Trạng thái</th>
-                <th class="py-3 px-3 text-right">Xác nhận nộp tiền</th>
+                <th class="py-3 px-3 text-right">Hành động</th>
               </tr>
             </thead>
             <tbody id="settlementTableBody" class="divide-y divide-slate-100">
@@ -563,7 +529,7 @@
 
     </div>
 
-    <!-- ==================== TAB 4: LỊCH TRỰC NHẬT & VỆ SINH ==================== -->
+    <!-- ==================== TAB 3: LỊCH TRỰC NHẬT & VỆ SINH ==================== -->
     <div id="tabContent-duty" class="hidden space-y-4">
       <div class="bg-white rounded-3xl p-4 sm:p-6 border border-slate-200/80 shadow-xs">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 mb-4 border-b border-slate-100">
@@ -599,10 +565,47 @@
             <h3 class="font-extrabold text-slate-900 text-sm sm:text-base">Checklist Vệ Sinh Chuẩn Phòng KTX</h3>
             <p class="text-[11px] text-slate-400">Các hạng mục cần hoàn thành trước giờ ban quản lý kiểm tra</p>
           </div>
+          <button onclick="openAddChecklistModal()" class="px-2.5 py-1 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition">
+            + Thêm việc
+          </button>
         </div>
 
         <div id="checklistTasksContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
           <!-- Dynamic Checklist entries -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== TAB 4: BẢNG TIN THÔNG BÁO CHI TIẾT ==================== -->
+    <div id="tabContent-notices" class="hidden space-y-4">
+      <div class="bg-white rounded-3xl p-4 sm:p-6 border border-slate-200/80 shadow-xs">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
+          <div>
+            <h3 class="font-extrabold text-slate-900 text-base flex items-center gap-2">
+              <i class="fa-solid fa-bullhorn text-amber-500"></i>
+              <span>Bảng Tin Phòng KTX</span>
+            </h3>
+            <p class="text-xs text-slate-400">Xem và đăng tin tức, lịch kiểm tra phòng hoặc lý do xin đổi ca trực</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="openCreateNoticeModal()" class="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-xs transition flex items-center gap-1.5">
+              <i class="fa-solid fa-pen-to-square"></i>
+              <span>Đăng Tin Mới</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Bộ lọc thông báo -->
+        <div class="flex items-center gap-2 my-3 overflow-x-auto no-scrollbar text-xs font-semibold">
+          <button onclick="filterNotices('all')" id="noticeFilter-all" class="px-3 py-1.5 rounded-xl bg-slate-900 text-white">Tất cả</button>
+          <button onclick="filterNotices('swap')" id="noticeFilter-swap" class="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200">Đổi ca</button>
+          <button onclick="filterNotices('urgent')" id="noticeFilter-urgent" class="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200">Khẩn cấp / Kiểm tra</button>
+          <button onclick="filterNotices('finance')" id="noticeFilter-finance" class="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200">Chi tiêu / Quỹ</button>
+        </div>
+
+        <!-- Danh sách bài đăng thông báo -->
+        <div id="fullNoticesContainer" class="space-y-3">
+          <!-- Dynamic entries -->
         </div>
       </div>
     </div>
@@ -632,7 +635,266 @@
 
   </main>
 
-  <!-- MODAL: ĐĂNG NHẬP / ĐĂNG KÝ PHÒNG KTX (ĐỒNG BỘ MÂY) -->
+  <!-- MODAL: TRUNG TÂM ĐỒNG BỘ ĐA THIẾT BỊ 3 LỚP (CLOUD - QR - CODE) -->
+  <div id="modalDeviceSync" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 modal-backdrop hidden">
+    <div class="bg-white rounded-3xl max-w-md w-full p-4 sm:p-6 shadow-2xl border border-slate-100 flex flex-col max-h-[92vh]">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100 shrink-0">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 text-white flex items-center justify-center font-black text-sm shadow-xs">
+            <i class="fa-solid fa-tower-broadcast"></i>
+          </div>
+          <div>
+            <h3 class="font-extrabold text-slate-900 text-sm sm:text-base">Trung Tâm Đồng Bộ Đa Thiết Bị</h3>
+            <p class="text-[10px] sm:text-[11px] text-slate-400">Mở phòng trên điện thoại, máy tính bảng & laptop</p>
+          </div>
+        </div>
+        <button onclick="closeModal('modalDeviceSync')" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:text-slate-800 flex items-center justify-center transition">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Segmented Tab Switching -->
+      <div class="grid grid-cols-3 gap-1 p-1 bg-slate-100 rounded-2xl my-3 text-xs font-bold shrink-0">
+        <button type="button" onclick="switchSyncTab('cloud')" id="syncTabBtn-cloud" class="py-1.5 rounded-xl transition bg-white text-emerald-700 shadow-xs">
+          <i class="fa-solid fa-cloud mr-1"></i>Mây Live
+        </button>
+        <button type="button" onclick="switchSyncTab('qr')" id="syncTabBtn-qr" class="py-1.5 rounded-xl transition text-slate-600 hover:text-slate-900">
+          <i class="fa-solid fa-qrcode mr-1"></i>Quét QR
+        </button>
+        <button type="button" onclick="switchSyncTab('code')" id="syncTabBtn-code" class="py-1.5 rounded-xl transition text-slate-600 hover:text-slate-900">
+          <i class="fa-solid fa-code mr-1"></i>Mã Zalo
+        </button>
+      </div>
+
+      <div class="overflow-y-auto flex-grow space-y-3.5 pr-0.5 text-xs">
+        <!-- TAB 1: ĐỒNG BỘ QUA MÂY CLOUD (LIVE) -->
+        <div id="syncSection-cloud" class="space-y-2.5">
+          <div class="p-3 bg-emerald-50/80 border border-emerald-200 rounded-2xl space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="text-slate-600 font-medium">Trạng thái kết nối:</span>
+              <span id="syncModalCloudStatus" class="font-bold text-emerald-700 flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                <span>Đang kết nối Live</span>
+              </span>
+            </div>
+            <div class="flex items-center justify-between text-[11px]">
+              <span class="text-slate-500">Mã phòng:</span>
+              <strong id="syncModalRoomCode" class="font-mono text-indigo-700 text-xs font-extrabold">KTX402</strong>
+            </div>
+            <div class="flex items-center justify-between text-[11px]">
+              <span class="text-slate-500">Mã PIN:</span>
+              <strong id="syncModalRoomPin" class="font-mono text-indigo-700 text-xs font-extrabold">1234</strong>
+            </div>
+            <div class="flex items-center justify-between text-[11px]">
+              <span class="text-slate-500">Cập nhật lần cuối:</span>
+              <span id="syncModalLastTime" class="font-mono text-slate-600 font-semibold">Vừa xong</span>
+            </div>
+          </div>
+
+          <!-- Mẹo xử lý Cache & GitHub Pages -->
+          <div class="p-2.5 bg-amber-50 border border-amber-200 rounded-xl text-amber-900 text-[11px] leading-relaxed space-y-1">
+            <div class="font-bold flex items-center gap-1 text-amber-800">
+              <i class="fa-solid fa-lightbulb"></i>
+              <span>Lưu ý khi vừa cập nhật code trên GitHub:</span>
+            </div>
+            <ul class="list-disc list-inside space-y-0.5 text-slate-700">
+              <li><strong>Chờ 1 - 3 phút:</strong> GitHub Pages cần thời gian build lại file mới.</li>
+              <li><strong>Máy tính:</strong> Bấm <code>Ctrl + F5</code> hoặc <code>Cmd + Shift + R</code> để bỏ cache cũ.</li>
+              <li><strong>Điện thoại:</strong> Mở qua tab ẩn danh (Incognito) hoặc bấm nút <strong>"Tải bản mới"</strong> ở góc trên trang web.</li>
+            </ul>
+          </div>
+
+          <!-- Nút hành động Đẩy & Kéo trực tiếp -->
+          <div class="grid grid-cols-2 gap-2 pt-1">
+            <button onclick="handlePushDataToCloud()" class="py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-xs transition flex items-center justify-center gap-1.5">
+              <i class="fa-solid fa-cloud-arrow-up"></i>
+              <span>Đẩy Lên Mây (Push)</span>
+            </button>
+            <button onclick="handlePullDataFromCloud()" class="py-2.5 px-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-xs transition flex items-center justify-center gap-1.5">
+              <i class="fa-solid fa-cloud-arrow-down"></i>
+              <span>Tải Về Máy (Pull)</span>
+            </button>
+          </div>
+
+          <button onclick="copyDeviceSyncLink()" class="w-full py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs transition flex items-center justify-center gap-2">
+            <i class="fa-solid fa-link text-slate-500"></i>
+            <span>Sao Chép Link Mở Phòng (Tự Bỏ Cache)</span>
+          </button>
+        </div>
+
+        <!-- TAB 2: ĐỒNG BỘ QUA MÃ QR TRỰC TIẾP -->
+        <div id="syncSection-qr" class="space-y-3 hidden text-center">
+          <p class="text-[11px] text-slate-500">Dùng Camera điện thoại hoặc Zalo quét mã này để tự mở phòng và tải bản mới nhất:</p>
+          <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200 inline-block mx-auto shadow-inner">
+            <img id="directSyncQRCode" src="" alt="Mã QR Đồng Bộ Phòng" class="w-52 h-52 mx-auto rounded-xl object-contain bg-white">
+          </div>
+          <div class="text-[10px] text-slate-400 font-mono">Link đã được gắn mã chống cache thời gian thực</div>
+        </div>
+
+        <!-- TAB 3: ĐỒNG BỘ QUA CHUỖI MÃ NÉN ZALO -->
+        <div id="syncSection-code" class="space-y-3 hidden">
+          <div class="p-2.5 bg-indigo-50 border border-indigo-200 rounded-xl text-indigo-900 text-[11px]">
+            Nếu mạng yếu không kết nối được mây, hãy dùng mã nén một chạm để gửi qua tin nhắn Zalo:
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Mã đồng bộ của máy này (Gửi cho bạn khác):</label>
+            <div class="flex gap-2">
+              <input type="text" id="exportSyncPayloadInput" readonly class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl font-mono text-[11px]">
+              <button onclick="copyRawSyncPayload()" class="px-3 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shrink-0 transition">
+                Chép
+              </button>
+            </div>
+          </div>
+
+          <div class="pt-2 border-t border-slate-100">
+            <label class="block font-bold text-slate-700 mb-1">Nhận mã từ bạn khác gửi qua Zalo:</label>
+            <textarea id="importSyncPayloadInput" rows="2" placeholder="Dán chuỗi mã nhận được vào đây..." class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl font-mono text-[11px] mb-2"></textarea>
+            <button onclick="handleImportSyncPayload()" class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-xs transition flex items-center justify-center gap-2">
+              <i class="fa-solid fa-file-import"></i>
+              <span>Nạp & Đồng Bộ Ngay</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-slate-100 flex justify-end shrink-0">
+        <button type="button" onclick="closeModal('modalDeviceSync')" class="px-4 py-2 rounded-xl text-slate-500 hover:bg-slate-100 text-xs font-bold transition">
+          Đóng
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: VIETQR CHUYỂN KHOẢN TỰ ĐỘNG NHẬN DIỆN (SEPAY AUTO-DETECT) -->
+  <div id="modalVietQR" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 modal-backdrop hidden">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-4 sm:p-6 shadow-2xl border border-slate-100 flex flex-col text-center relative overflow-hidden">
+      <!-- Màn hình chúc mừng khi nhận tiền thành công -->
+      <div id="qrSuccessOverlay" class="absolute inset-0 bg-emerald-600 text-white flex flex-col items-center justify-center p-6 z-20 hidden">
+        <div class="w-16 h-16 rounded-full bg-white/20 text-white flex items-center justify-center text-3xl mb-3 animate-bounce">
+          <i class="fa-solid fa-check-double"></i>
+        </div>
+        <h3 class="text-xl font-black mb-1">TING TING! THÀNH CÔNG!</h3>
+        <p class="text-xs text-emerald-100 mb-4">Hệ thống đã tự động nhận diện thanh toán và đổi trạng thái "ĐÃ NỘP" cho cả phòng.</p>
+        <div class="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+      </div>
+
+      <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+        <div class="flex items-center gap-1.5 text-left">
+          <div class="w-6 h-6 rounded-lg bg-teal-500/20 text-teal-600 flex items-center justify-center text-xs">
+            <i class="fa-solid fa-qrcode"></i>
+          </div>
+          <div>
+            <h3 class="font-extrabold text-slate-900 text-xs sm:text-sm">VietQR Bù Trừ Tự Động</h3>
+          </div>
+        </div>
+        <div class="flex items-center gap-1">
+          <button onclick="openSePayConfigModal()" class="w-7 h-7 rounded-full bg-amber-50 text-amber-600 hover:bg-amber-100 flex items-center justify-center text-xs transition" title="Cài đặt SePay API Token">
+            <i class="fa-solid fa-bolt"></i>
+          </button>
+          <button onclick="closeVietQRModal()" class="w-7 h-7 rounded-full bg-slate-100 text-slate-500 hover:text-slate-800 flex items-center justify-center text-xs transition">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="my-3 space-y-2">
+        <div class="p-2.5 bg-slate-50 rounded-2xl border border-slate-200/80 inline-block mx-auto shadow-inner relative">
+          <img id="qrImageElement" src="" alt="VietQR" class="w-52 h-52 mx-auto rounded-xl object-contain bg-white">
+        </div>
+
+        <div class="space-y-0.5">
+          <div class="text-xs text-slate-500">
+            <span id="qrPayerName" class="font-bold text-slate-800">Huy</span>
+            <span class="text-slate-400 mx-1">chuyển cho</span>
+            <span id="qrReceiverName" class="font-bold text-teal-700">Long</span>
+          </div>
+          <div id="qrBankDetail" class="text-[11px] text-slate-500 font-mono">MB - 0981234567</div>
+          <div id="qrAmountDisplay" class="text-lg font-black text-rose-600 whitespace-nowrap">26.767&nbsp;₫</div>
+        </div>
+
+        <!-- Mã Memo duy nhất (Unique Code để bắt biến động số dư) -->
+        <div class="p-2 bg-slate-100 rounded-xl text-left text-[11px] space-y-1">
+          <div class="flex items-center justify-between text-slate-500">
+            <span>Nội dung chuyển khoản (Memo):</span>
+            <button onclick="copyQRTransferText()" class="text-indigo-600 font-bold hover:underline">Sao chép</button>
+          </div>
+          <div id="qrMemoDisplay" class="font-mono font-black text-indigo-700 bg-white p-1.5 rounded-lg border border-slate-200 text-center text-xs tracking-wider select-all">
+            KTX402 PAY W9X2
+          </div>
+        </div>
+
+        <!-- Radar Lắng Nghe Biến Động Số Dư Real-time -->
+        <div class="p-2 bg-emerald-50/80 border border-emerald-200 rounded-xl flex items-center justify-between text-[11px]">
+          <div class="flex items-center gap-1.5 text-emerald-800 text-left">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+            <span id="qrPollingStatusText" class="font-semibold">Đang lắng nghe tài khoản nhận tiền...</span>
+          </div>
+          <span id="qrPollingCountTag" class="text-[10px] font-mono font-bold text-emerald-600">0s</span>
+        </div>
+      </div>
+
+      <div class="space-y-2 pt-1">
+        <!-- Nút Xác Nhận Nộp Tức Thì (Thủ công hoặc khi đã chuyển xong) -->
+        <button id="btnConfirmQRPayment" onclick="confirmQRPaymentSuccess(false)" class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shadow-md shadow-emerald-200 transition flex items-center justify-center gap-2">
+          <i class="fa-solid fa-circle-check"></i>
+          <span>Tôi Đã Chuyển Xong (Cập Nhật Đã Nộp)</span>
+        </button>
+
+        <div class="grid grid-cols-2 gap-2">
+          <button type="button" onclick="copyQRTransferText()" class="py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[11px] transition flex items-center justify-center gap-1">
+            <i class="fa-solid fa-copy"></i>
+            <span>Chép số tài khoản</span>
+          </button>
+          <button type="button" onclick="triggerSimulatedBankTransfer()" class="py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 font-bold text-[11px] transition flex items-center justify-center gap-1" title="Bấm thử để trải nghiệm chuông ting ting tự động">
+            <i class="fa-solid fa-wand-magic-sparkles text-amber-600"></i>
+            <span>Test Ting Ting</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: CẤU HÌNH SEPAY API (TỰ ĐỘNG BẮT GIAO DỊCH NGÂN HÀNG) -->
+  <div id="modalSePayConfig" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 modal-backdrop hidden">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-4 sm:p-6 shadow-2xl border border-slate-100 flex flex-col text-xs">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <h3 class="font-extrabold text-slate-900 text-sm">Cài Đặt Tự Động Bắt VietQR (SePay)</h3>
+        <button onclick="closeModal('modalSePayConfig')" class="w-7 h-7 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center text-xs">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="my-3 space-y-2.5">
+        <p class="text-slate-500 leading-relaxed text-[11px]">
+          Để web tự động phát chuông <strong>Ting Ting</strong> và đổi nhãn <strong>"Đã nộp"</strong> mà không cần bấm tay, bạn chỉ cần lấy API Token miễn phí từ <code>sepay.vn</code>:
+        </p>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">SePay API Token:</label>
+          <input type="text" id="inputSePayApiToken" placeholder="VD: ABCD1234EFGH5678..." class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl font-mono font-bold text-xs">
+        </div>
+
+        <div class="p-2 bg-slate-50 border border-slate-200 rounded-xl text-[10px] text-slate-500 space-y-1">
+          <div class="font-bold text-slate-700">Cách lấy nhanh trong 2 phút:</div>
+          <div>1. Đăng ký tài khoản tại <strong>SePay.vn</strong> (Gói cá nhân miễn phí).</div>
+          <div>2. Thêm STK ngân hàng của Trưởng phòng hoặc bạn nhận tiền.</div>
+          <div>3. Vào mục <strong>API Key</strong> copy mã dán vào ô trên.</div>
+        </div>
+      </div>
+
+      <div class="pt-2 border-t border-slate-100 flex items-center justify-between gap-2">
+        <button onclick="clearSePayToken()" class="px-3 py-2 rounded-xl text-rose-600 hover:bg-rose-50 font-bold transition">
+          Xóa Token
+        </button>
+        <button onclick="saveSePayConfig()" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold shadow-xs transition">
+          Lưu Cài Đặt
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: ĐĂNG NHẬP / ĐỔI PHÒNG KTX -->
   <div id="modalAuthRoom" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 modal-backdrop hidden">
     <div class="bg-white rounded-3xl max-w-md w-full p-4 sm:p-6 shadow-2xl border border-slate-100 flex flex-col max-h-[92vh]">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100 shrink-0">
@@ -745,7 +1007,7 @@
     </div>
   </div>
 
-  <!-- MODAL: QUÉT HÓA ĐƠN AI (GEMINI BILL SCANNER) -->
+  <!-- MODAL: QUÉT HÓA ĐƠN AI (AI BILL SCANNER) -->
   <div id="modalScanBill" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 modal-backdrop hidden">
     <div class="bg-white rounded-3xl max-w-md w-full p-4 sm:p-6 shadow-2xl border border-slate-100 flex flex-col max-h-[92vh]">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100 shrink-0">
@@ -912,159 +1174,6 @@
           <span>Lưu Thay Đổi</span>
         </button>
       </form>
-    </div>
-  </div>
-
-  <!-- MODAL: VIETQR CHUYỂN KHOẢN TỰ ĐỘNG CẬP NHẬT TRẠNG THÁI -->
-  <div id="modalVietQR" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 modal-backdrop hidden">
-    <div class="bg-white rounded-3xl max-w-sm w-full p-4 sm:p-5 shadow-2xl border border-slate-100 flex flex-col text-center relative overflow-hidden">
-      
-      <!-- Thanh trạng thái đang lắng nghe giao dịch -->
-      <div id="qrScanningRadar" class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-teal-400 via-emerald-500 to-indigo-500 animate-pulse"></div>
-
-      <div class="flex items-center justify-between pb-2 border-b border-slate-100">
-        <div class="flex items-center gap-1.5 text-left">
-          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
-          <h3 class="font-extrabold text-slate-900 text-xs sm:text-sm">VietQR Tự Bắt Giao Dịch</h3>
-        </div>
-        <div class="flex items-center gap-1">
-          <button onclick="openSePayConfigModal()" class="w-7 h-7 rounded-full bg-teal-50 text-teal-700 hover:bg-teal-100 flex items-center justify-center text-xs transition" title="Cấu hình SePay API">
-            <i class="fa-solid fa-gear"></i>
-          </button>
-          <button onclick="closeVietQRModal()" class="w-7 h-7 rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 flex items-center justify-center text-xs">
-            <i class="fa-solid fa-xmark"></i>
-          </button>
-        </div>
-      </div>
-
-      <div class="my-2 space-y-2">
-        <!-- Huy hiệu trạng thái đang dò tìm biến động -->
-        <div class="p-1.5 rounded-xl bg-teal-50 border border-teal-200/80 flex items-center justify-between text-[10px] text-teal-900 font-semibold">
-          <div class="flex items-center gap-1.5 min-w-0">
-            <i class="fa-solid fa-satellite-dish text-teal-600 animate-spin"></i>
-            <span id="qrPollingStatusText" class="truncate">Đang dò giao dịch qua Ngân hàng...</span>
-          </div>
-          <span id="qrPollingCountTag" class="font-mono font-bold text-teal-700 bg-white px-1.5 py-0.2 rounded border border-teal-200 shrink-0">3s</span>
-        </div>
-
-        <div class="p-2 bg-slate-50 rounded-2xl border border-slate-200/80 inline-block mx-auto shadow-inner relative">
-          <img id="qrImageElement" src="" alt="VietQR" class="w-44 h-44 mx-auto rounded-xl object-contain bg-white">
-          <div id="qrSuccessOverlay" class="absolute inset-0 bg-emerald-600/95 rounded-2xl flex flex-col items-center justify-center text-white hidden p-2">
-            <i class="fa-solid fa-circle-check text-4xl animate-bounce mb-1"></i>
-            <span class="font-black text-sm">TIỀN ĐÃ VỀ TÀI KHOẢN!</span>
-            <span class="text-[10px] text-emerald-100">Đã tự động cập nhật "ĐÃ NỘP"</span>
-          </div>
-        </div>
-
-        <!-- Thông tin người chuyển và người nhận -->
-        <div class="p-2 rounded-xl bg-slate-50 border border-slate-200/70 text-left text-[11px] space-y-1">
-          <div class="flex items-center justify-between">
-            <span class="text-slate-400">Người chuyển:</span>
-            <strong id="qrPayerName" class="text-rose-600 font-extrabold truncate max-w-[150px]">Bạn</strong>
-          </div>
-          <div class="flex items-center justify-between">
-            <span class="text-slate-400">Người nhận:</span>
-            <strong id="qrReceiverName" class="text-teal-700 font-extrabold truncate max-w-[150px]">Huy</strong>
-          </div>
-          <div class="flex items-center justify-between">
-            <span class="text-slate-400">Tài khoản:</span>
-            <span id="qrBankDetail" class="font-mono text-slate-700 font-bold">MBBank - 0981234567</span>
-          </div>
-        </div>
-
-        <div class="flex items-baseline justify-center gap-1">
-          <span class="text-xs text-slate-400">Số tiền:</span>
-          <span id="qrAmountDisplay" class="text-lg font-black text-rose-600 whitespace-nowrap">26.767&nbsp;₫</span>
-        </div>
-        <div>
-          <div class="text-[10px] text-slate-400 mb-0.5">Nội dung chuyển tiền tự động nhận diện:</div>
-          <div id="qrMemoDisplay" class="text-[11px] text-slate-700 bg-indigo-50/90 py-1.5 px-2.5 rounded-xl font-mono font-bold truncate border border-indigo-100">KTX402 PAY ABC123</div>
-        </div>
-      </div>
-
-      <!-- Khối nút bấm thao tác & Giả lập -->
-      <div class="space-y-1.5 pt-1">
-        <button id="btnConfirmQRPayment" onclick="confirmQRPaymentSuccess()" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:opacity-95 text-white font-extrabold text-xs shadow-md shadow-emerald-200 transition flex items-center justify-center gap-2">
-          <i class="fa-solid fa-circle-check"></i>
-          <span>Xác Nhận Nộp Thủ Công (Nếu cần)</span>
-        </button>
-
-        <div class="grid grid-cols-2 gap-1.5">
-          <button onclick="copyQRTransferText()" class="py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[11px] transition flex items-center justify-center gap-1">
-            <i class="fa-solid fa-copy text-[10px]"></i>
-            <span>Sao chép STK</span>
-          </button>
-          
-          <!-- Nút kích hoạt ting ting mô phỏng tức thì để trải nghiệm -->
-          <button onclick="triggerSimulatedBankTransfer()" class="py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 font-bold text-[11px] border border-amber-200 transition flex items-center justify-center gap-1" title="Kiểm tra xem hệ thống tự bắt giao dịch thế nào">
-            <i class="fa-solid fa-wand-magic-sparkles text-amber-600 text-[10px]"></i>
-            <span>Test Ting Ting</span>
-          </button>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- MODAL: CẤU HÌNH SEPAY TỰ ĐỘNG BẮT BIẾN ĐỘNG SỐ DƯ -->
-  <div id="modalSePayConfig" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 modal-backdrop hidden">
-    <div class="bg-white rounded-3xl max-w-md w-full p-4 sm:p-6 shadow-2xl border border-slate-100 flex flex-col max-h-[92vh]">
-      <div class="flex items-center justify-between pb-3 border-b border-slate-100 shrink-0">
-        <div class="flex items-center gap-2.5">
-          <div class="w-9 h-9 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center font-black text-sm">
-            <i class="fa-solid fa-bolt"></i>
-          </div>
-          <div>
-            <h3 class="font-extrabold text-slate-900 text-sm sm:text-base">Tự Động Bắt Giao Dịch SePay</h3>
-            <p class="text-[10px] sm:text-[11px] text-slate-400">Kết nối tài khoản ngân hàng để tự nhận diện tiền về</p>
-          </div>
-        </div>
-        <button onclick="closeModal('modalSePayConfig')" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-
-      <div class="overflow-y-auto flex-grow my-3 space-y-3 text-xs pr-0.5">
-        <div class="p-3 bg-teal-50 border border-teal-200 rounded-2xl text-teal-950 space-y-1.5 leading-relaxed text-[11px]">
-          <div class="font-bold flex items-center gap-1.5 text-teal-800">
-            <i class="fa-solid fa-circle-info"></i>
-            <span>Cách hoạt động hoàn toàn miễn phí:</span>
-          </div>
-          <ol class="list-decimal list-inside space-y-1 text-slate-700">
-            <li>Đăng ký 1 tài khoản miễn phí tại <strong class="text-teal-800">sepay.vn</strong> hoặc <strong class="text-teal-800">casso.vn</strong>.</li>
-            <li>Kết nối tài khoản ngân hàng (MB, VCB, TPB, ACB...) của Trưởng phòng.</li>
-            <li>Lấy <strong>API Token</strong> dán vào ô bên dưới.</li>
-          </ol>
-        </div>
-
-        <div>
-          <label class="block font-bold text-slate-700 mb-1">SePay API Token (Personal Access Token)</label>
-          <input type="password" id="inputSePayApiToken" placeholder="Dán mã API Token của SePay vào đây..." class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-mono text-xs focus:ring-2 focus:ring-teal-500/30">
-          <p class="text-[10px] text-slate-400 mt-1">Hệ thống sẽ dùng mã này để truy vấn lịch sử giao dịch mỗi khi mở mã VietQR.</p>
-        </div>
-
-        <div class="p-2.5 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between">
-          <div class="min-w-0 pr-2">
-            <div class="font-bold text-slate-800 text-xs">Chế độ tự động lắng nghe (Polling 3s)</div>
-            <div class="text-[10px] text-slate-400">Tự động kiểm tra giao dịch liên tục khi bật mã QR</div>
-          </div>
-          <input type="checkbox" id="checkEnableAutoPolling" checked class="w-4 h-4 rounded text-teal-600 focus:ring-teal-500">
-        </div>
-      </div>
-
-      <div class="pt-3 border-t border-slate-100 flex items-center justify-between shrink-0">
-        <button onclick="clearSePayToken()" class="text-rose-500 hover:text-rose-700 text-xs font-semibold">
-          Xóa Token
-        </button>
-        <div class="flex items-center gap-2">
-          <button onclick="closeModal('modalSePayConfig')" class="px-3.5 py-2 rounded-xl text-slate-500 hover:bg-slate-100 text-xs font-bold transition">
-            Đóng
-          </button>
-          <button onclick="saveSePayConfig()" class="px-4 py-2 rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold shadow-xs transition">
-            Lưu Cấu Hình
-          </button>
-        </div>
-      </div>
     </div>
   </div>
 
@@ -1259,66 +1368,6 @@
     </div>
   </div>
 
-  <!-- MODAL: ĐỒNG BỘ LÊN MỌI THIẾT BỊ ĐIỆN TỬ (QR CODE & LINK TỰ ĐỘNG) -->
-  <div id="modalDeviceSync" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 modal-backdrop hidden">
-    <div class="bg-white rounded-3xl max-w-sm w-full p-4 sm:p-6 shadow-2xl border border-slate-100 flex flex-col text-center">
-      <div class="flex items-center justify-between pb-3 border-b border-slate-100 shrink-0">
-        <div class="flex items-center gap-2">
-          <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-sm font-black shadow-xs">
-            <i class="fa-solid fa-mobile-screen-button"></i>
-          </div>
-          <div class="text-left">
-            <h3 class="font-extrabold text-slate-900 text-sm">Đồng Bộ Sang Thiết Bị Khác</h3>
-            <p class="text-[10px] text-slate-400">Mở điện thoại, iPad hoặc máy tính khác</p>
-          </div>
-        </div>
-        <button onclick="closeModal('modalDeviceSync')" class="w-7 h-7 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center text-xs">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-
-      <div class="my-3 space-y-2.5">
-        <div class="p-2.5 bg-slate-50 rounded-2xl border border-slate-200/80 inline-block mx-auto shadow-inner">
-          <img id="syncQRCodeImage" src="" alt="Mã QR đồng bộ" class="w-48 h-48 mx-auto rounded-xl object-contain bg-white">
-        </div>
-        <div class="text-xs font-bold text-slate-800">
-          Dùng Camera điện thoại quét mã trên để mở phòng
-        </div>
-        <div class="p-3 bg-gradient-to-br from-indigo-50/90 to-teal-50/90 border border-indigo-100 rounded-2xl text-[11px] text-indigo-950 text-left space-y-1.5">
-          <div class="flex items-center justify-between">
-            <span class="text-slate-500">Mã phòng:</span>
-            <strong id="syncRoomCodeText" class="font-mono text-indigo-700 font-extrabold text-xs">KTX402</strong>
-          </div>
-          <div class="flex items-center justify-between">
-            <span class="text-slate-500">Mã PIN:</span>
-            <strong id="syncRoomPinText" class="font-mono text-indigo-700 font-extrabold text-xs">1234</strong>
-          </div>
-          <div class="flex items-center justify-between">
-            <span class="text-slate-500">Trạng thái mây:</span>
-            <span class="inline-flex items-center gap-1 font-bold text-emerald-700">
-              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-              <span>Thời gian thực (Live)</span>
-            </span>
-          </div>
-          <div class="text-[10px] text-slate-500 pt-1 border-t border-indigo-100/60 leading-relaxed">
-            ⚡ <strong>Tự động 100%:</strong> Khi bất kỳ ai trong phòng thêm khoản chi hoặc nộp tiền, tất cả các điện thoại đang mở đều tự nhảy số tức thì mà không cần tải lại!
-          </div>
-        </div>
-      </div>
-
-      <div class="space-y-2 pt-1">
-        <button onclick="copyDeviceSyncLink()" class="w-full py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-xs transition flex items-center justify-center gap-2">
-          <i class="fa-solid fa-copy"></i>
-          <span>Sao Chép Link Đồng Bộ Gửi Zalo</span>
-        </button>
-        <button onclick="forceSyncFromCloud()" class="w-full py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold text-xs border border-emerald-200 transition flex items-center justify-center gap-1.5">
-          <i class="fa-solid fa-rotate animate-spin"></i>
-          <span>Tải Lại Dữ Liệu Mới Nhất Từ Mây</span>
-        </button>
-      </div>
-    </div>
-  </div>
-
   <!-- TOAST THÔNG BÁO TÙY BIẾN -->
   <div id="toastNotification" class="fixed bottom-5 right-5 z-50 bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-xl border border-slate-700/80 flex items-center gap-2.5 transition-all duration-300 transform translate-y-20 opacity-0 pointer-events-none">
     <div id="toastIcon" class="w-6 h-6 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center shrink-0 text-xs">
@@ -1332,7 +1381,11 @@
     import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
     import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-    /* PHIÊN LÀM VIỆC & BỘ NHỚ IN-MEMORY (KHÔNG SỬ DỤNG LOCALSTORAGE THEO QUY ĐỊNH) */
+    /* STATE & SESSION STORAGE KEYS */
+    const STORAGE_KEY = 'KTX_SPLITTER_CLEAN_DATA_v4_0';
+    const SESSION_KEY = 'KTX_CURRENT_SESSION_v4_0';
+    const SAVED_ROOMS_KEY = 'KTX_SAVED_ROOMS_REGISTRY_v4_0';
+
     let currentSession = {
       roomCode: "KTX402",
       pin: "1234",
@@ -1343,6 +1396,7 @@
       roomName: "Phòng 402 - KTX",
       roomCode: "KTX402",
       pin: "1234",
+      sepayToken: "",
       members: [
         { id: "m1", name: "Nhật Huy (Trưởng Phòng)", bank: "MB", account: "0981234567" },
         { id: "m2", name: "Hoàng Long", bank: "TCB", account: "1903567890123" },
@@ -1437,11 +1491,10 @@
     let tempSpinnedMember = null;
     let selectedBillImageBase64 = null;
     let activeQRTransfer = null;
-    let autoDetectTimer = null;
     let qrPollingInterval = null;
     let qrPollingCount = 0;
 
-    /* HELPER: LẤY TÊN CHÍNH (GIVEN NAME) TRÁNH TRÙNG HỌ VÀ RÚT GỌN CHUẨN */
+    /* HELPER: RÚT GỌN TÊN CHÍNH (GIVEN NAME) TRÁNH DÀI DÒNG */
     function getShortName(fullName) {
       if (!fullName) return '';
       const clean = fullName.replace(/\(.*?\)/g, '').trim();
@@ -1502,7 +1555,7 @@
         osc1.frequency.setValueAtTime(880, now + 0.1); // A5
         osc2.frequency.setValueAtTime(1174.66, now + 0.2); // D6
 
-        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.setValueAtTime(0.25, now);
         gain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
 
         osc1.connect(gain);
@@ -1514,8 +1567,19 @@
         osc1.stop(now + 0.6);
         osc2.stop(now + 0.6);
       } catch (e) {
-        console.debug("Audio play:", e);
+        console.debug("Chime audio error:", e);
       }
+    }
+
+    const crossTabChannel = typeof BroadcastChannel !== 'undefined' ? new BroadcastChannel('ktx_sync_channel_v4') : null;
+    if (crossTabChannel) {
+      crossTabChannel.onmessage = (event) => {
+        if (event.data?.type === 'ROOM_UPDATED' && event.data.payload) {
+          appData = event.data.payload;
+          updateUI();
+          renderExpenseInputs();
+        }
+      };
     }
 
     function updateSessionLabels() {
@@ -1561,18 +1625,20 @@
       }
     }
 
-    let inMemorySavedRooms = [
-      { code: "KTX402", name: "Phòng 402 - KTX", pin: "1234" }
-    ];
-
     function recordSavedRoom(code, name, pin) {
-      inMemorySavedRooms = inMemorySavedRooms.filter(r => r.code !== code);
-      inMemorySavedRooms.unshift({
-        code: code,
-        name: name || `Phòng ${code}`,
-        pin: pin || "1234"
-      });
-      renderSavedRoomsList();
+      try {
+        let registry = JSON.parse(localStorage.getItem(SAVED_ROOMS_KEY) || '[]');
+        registry = registry.filter(r => r.code !== code);
+        registry.unshift({
+          code,
+          name: name || `Phòng ${code}`,
+          pin: pin || '1234',
+          lastAccess: new Date().toISOString()
+        });
+        localStorage.setItem(SAVED_ROOMS_KEY, JSON.stringify(registry.slice(0, 10)));
+      } catch (e) {
+        console.warn("Registry save error:", e);
+      }
     }
 
     function renderSavedRoomsList() {
@@ -1580,9 +1646,20 @@
       const badge = document.getElementById('savedRoomsCountBadge');
       if (!container) return;
 
-      if (badge) badge.innerText = inMemorySavedRooms.length;
+      let registry = [];
+      try {
+        registry = JSON.parse(localStorage.getItem(SAVED_ROOMS_KEY) || '[]');
+      } catch (e) {
+        registry = [];
+      }
 
-      container.innerHTML = inMemorySavedRooms.map(r => {
+      if (registry.length === 0) {
+        registry = [{ code: currentSession.roomCode, name: appData?.roomName || "Phòng KTX", pin: currentSession.pin }];
+      }
+
+      if (badge) badge.innerText = registry.length;
+
+      container.innerHTML = registry.map(r => {
         const isActive = r.code === currentSession.roomCode;
         return `
           <div class="p-2 rounded-xl border flex items-center justify-between gap-2 transition ${isActive ? 'bg-indigo-50/80 border-indigo-200' : 'bg-slate-50 border-slate-200/70 hover:bg-slate-100'}">
@@ -1607,51 +1684,31 @@
       }).join('');
     }
 
-    function openAuthModal(defaultTab = 'login') {
-      switchAuthTab(defaultTab);
-      renderSavedRoomsList();
-      const codeInput = document.getElementById('loginRoomCode');
-      if (codeInput) codeInput.value = currentSession.roomCode || '';
-      const pinInput = document.getElementById('loginRoomPin');
-      if (pinInput) pinInput.value = currentSession.pin || '';
-      const nameInput = document.getElementById('loginMemberName');
-      if (nameInput) nameInput.value = currentSession.userName || '';
-      openModal('modalAuthRoom');
+    function getDeviceSyncLink() {
+      const code = sanitizeRoomCode(currentSession.roomCode);
+      const pin = currentSession.pin || '1234';
+      const baseUrl = window.location.href.split('?')[0].split('#')[0];
+      // Tự động gắn _v=timestamp để khi thiết bị khác mở sẽ bỏ qua bộ nhớ đệm cache cũ
+      return `${baseUrl}?room=${encodeURIComponent(code)}&pin=${encodeURIComponent(pin)}&_v=${Date.now()}`;
     }
 
-    function switchAuthTab(tab) {
-      const btnLogin = document.getElementById('authTabBtn-login');
-      const btnCreate = document.getElementById('authTabBtn-create');
-      const formLogin = document.getElementById('formLoginRoom');
-      const formCreate = document.getElementById('formCreateRoom');
-
-      if (tab === 'login') {
-        if (btnLogin) btnLogin.className = "py-2 rounded-xl transition bg-white text-indigo-600 shadow-xs";
-        if (btnCreate) btnCreate.className = "py-2 rounded-xl transition text-slate-600 hover:text-slate-900";
-        if (formLogin) formLogin.classList.remove('hidden');
-        if (formCreate) formCreate.classList.add('hidden');
-      } else {
-        if (btnCreate) btnCreate.className = "py-2 rounded-xl transition bg-white text-teal-600 shadow-xs";
-        if (btnLogin) btnLogin.className = "py-2 rounded-xl transition text-slate-600 hover:text-slate-900";
-        if (formCreate) formCreate.classList.remove('hidden');
-        if (formLogin) formLogin.classList.add('hidden');
-      }
+    function copyDeviceSyncLink() {
+      const link = getDeviceSyncLink();
+      copyToClipboard(link);
+      showToast("Đã sao chép link đồng bộ (tự bỏ cache)! Gửi vào Zalo là máy bạn khác sẽ mở ngay bản mới.", "success");
     }
 
-    /* KÊNH TRUYỀN PHÁT ĐỒNG BỘ ĐA TAB & THIẾT BỊ (BROADCAST CHANNEL) */
-    const crossTabChannel = typeof window.BroadcastChannel !== 'undefined' ? new BroadcastChannel('ktx_room_live_sync_bus') : null;
-    if (crossTabChannel) {
-      crossTabChannel.onmessage = (event) => {
-        if (event.data && event.data.type === 'ROOM_UPDATED' && event.data.roomCode === currentSession.roomCode) {
-          appData = event.data.payload;
-          updateUI();
-          showToast(`⚡ Nhận thay đổi mới từ thiết bị khác trong phòng!`, "info");
-        }
-      };
+    function forceReloadLatest() {
+      showToast("Đang tải lại bản mới nhất từ máy chủ...", "info");
+      const url = new URL(window.location.href);
+      url.searchParams.set('_v', Date.now().toString());
+      setTimeout(() => {
+        window.location.href = url.toString();
+      }, 300);
     }
 
     async function initCloudSync() {
-      // Đọc URL parameters để tự động nhận mã phòng khi quét mã QR hoặc mở link
+      // Đọc URL parameters tự động nhận phòng khi quét mã QR
       try {
         const urlParams = new URLSearchParams(window.location.search);
         const roomParam = urlParams.get('room');
@@ -1678,11 +1735,16 @@
           auth = getAuth(app);
           db = getFirestore(app);
 
-          // Tuân thủ RULE 3: Auth trước mọi truy vấn
+          // Tuân thủ RULE 3: Thử custom token trước, fallback sang anonymous
           const initialToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
           if (initialToken) {
-            const cred = await signInWithCustomToken(auth, initialToken);
-            currentUser = cred.user;
+            try {
+              const cred = await signInWithCustomToken(auth, initialToken);
+              currentUser = cred.user;
+            } catch (tokenErr) {
+              const cred = await signInAnonymously(auth);
+              currentUser = cred.user;
+            }
           } else {
             const cred = await signInAnonymously(auth);
             currentUser = cred.user;
@@ -1690,9 +1752,8 @@
         }
 
         if (!currentUser) return;
-
         isCloudSyncActive = true;
-        updateCloudSyncBadge("Đang kết nối", true);
+        updateCloudSyncBadge("Live Đa Thiết Bị", true);
 
         if (typeof unsubscribeCloudRoom === 'function') {
           unsubscribeCloudRoom();
@@ -1705,7 +1766,6 @@
         // Tuân thủ RULE 1: Đường dẫn nghiêm ngặt /artifacts/{appId}/public/data/{collectionName}/{documentId}
         const roomDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'rooms', roomDocId);
 
-        // Tuân thủ Quy định onSnapshot phải có error callback
         unsubscribeCloudRoom = onSnapshot(roomDocRef, (docSnap) => {
           if (docSnap.exists()) {
             const cloudPayload = docSnap.data();
@@ -1717,29 +1777,29 @@
                 if (!appData.paidMembers) appData.paidMembers = {};
                 if (!appData.settledTransfers) appData.settledTransfers = {};
 
+                lastSyncTimestamp = new Date().toLocaleTimeString('vi-VN');
                 updateUI();
                 renderExpenseInputs();
                 updateCloudSyncBadge("Live Đa Thiết Bị", true);
 
                 if (!isFirstLoad) {
                   playSuccessChime();
-                  showToast(`⚡ Vừa đồng bộ tự động từ thiết bị khác trong phòng!`, "info");
+                  showToast(`⚡ Đã tự động cập nhật từ thiết bị khác trong phòng!`, "info");
                 }
               } catch (parseErr) {
-                console.warn("Lỗi phân tích dữ liệu mây:", parseErr);
+                console.warn("Parse Cloud Error:", parseErr);
               }
             }
           } else {
-            // Phòng chưa có trên Firestore, tạo mới dữ liệu ban đầu
             saveDataToCloud();
           }
         }, (err) => {
-          console.warn("Lỗi lắng nghe Firestore Snapshot:", err);
+          console.warn("Firestore snapshot error:", err);
           updateCloudSyncBadge("Mất kết nối", false);
         });
 
       } catch (err) {
-        console.warn("Khởi tạo đồng bộ Firestore thất bại:", err);
+        console.warn("Init cloud sync failed:", err);
         updateCloudSyncBadge("Ngoại tuyến", false);
       }
     }
@@ -1763,7 +1823,6 @@
           authorName: currentSession.userName || "Huy"
         });
 
-        // Bắn tín hiệu sang các tab khác trên cùng máy
         if (crossTabChannel) {
           crossTabChannel.postMessage({
             type: 'ROOM_UPDATED',
@@ -1774,7 +1833,7 @@
 
         updateCloudSyncBadge("Live Đa Thiết Bị", true);
       } catch (e) {
-        console.warn("Lỗi lưu lên Firestore:", e);
+        console.warn("Cloud save error:", e);
         updateCloudSyncBadge("Lỗi đồng bộ", false);
       }
     }
@@ -1784,288 +1843,6 @@
       saveDataToCloud();
     }
 
-    async function forceSyncFromCloud() {
-      if (!db || !currentUser) {
-        showToast("Đang kết nối lại mây...", "info");
-        await initCloudSync();
-        return;
-      }
-      try {
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const safeCode = sanitizeRoomCode(currentSession.roomCode);
-        const roomDocId = `room_${safeCode.toLowerCase()}`;
-        const roomDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'rooms', roomDocId);
-        const snap = await getDoc(roomDocRef);
-        if (snap.exists() && snap.data().dataJson) {
-          appData = JSON.parse(snap.data().dataJson);
-          updateUI();
-          renderExpenseInputs();
-          showToast("Đã tải dữ liệu mới nhất từ đám mây thành công!", "success");
-        } else {
-          showToast("Dữ liệu trên mây đã khớp với phòng hiện tại.", "info");
-        }
-      } catch (err) {
-        showToast("Không thể tải từ mây lúc này!", "error");
-      }
-    }
-
-    function getDeviceSyncLink() {
-      const code = sanitizeRoomCode(currentSession.roomCode);
-      const pin = currentSession.pin || '1234';
-      const baseUrl = window.location.href.split('?')[0].split('#')[0];
-      return `${baseUrl}?room=${encodeURIComponent(code)}&pin=${encodeURIComponent(pin)}`;
-    }
-
-    function openDeviceSyncModal() {
-      const code = sanitizeRoomCode(currentSession.roomCode);
-      const pin = currentSession.pin || '1234';
-      const link = getDeviceSyncLink();
-
-      const codeTxt = document.getElementById('syncRoomCodeText');
-      const pinTxt = document.getElementById('syncRoomPinText');
-      const qrImg = document.getElementById('syncQRCodeImage');
-
-      if (codeTxt) codeTxt.innerText = code;
-      if (pinTxt) pinTxt.innerText = pin;
-      if (qrImg) {
-        qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(link)}`;
-      }
-
-      openModal('modalDeviceSync');
-    }
-
-    function copyDeviceSyncLink() {
-      const link = getDeviceSyncLink();
-      copyToClipboard(link);
-      showToast("Đã sao chép link đồng bộ! Gửi vào Zalo phòng để các bạn bấm vào là tự vào phòng ngay.", "success");
-    }
-
-    function initData() {
-      // Nhận diện mã phòng từ URL
-      try {
-        const urlParams = new URLSearchParams(window.location.search);
-        const roomParam = urlParams.get('room');
-        const pinParam = urlParams.get('pin');
-        if (roomParam) {
-          currentSession.roomCode = sanitizeRoomCode(roomParam);
-          if (pinParam) currentSession.pin = pinParam.trim();
-        }
-      } catch (e) {
-        console.debug("Init param err:", e);
-      }
-
-      appData.roomCode = sanitizeRoomCode(currentSession.roomCode);
-      updateSessionLabels();
-    }
-
-    async function handleLoginRoomSubmit(e) {
-      e.preventDefault();
-      const rawCode = document.getElementById('loginRoomCode').value;
-      const pin = document.getElementById('loginRoomPin').value.trim();
-      const userName = document.getElementById('loginMemberName').value.trim();
-
-      const safeCode = sanitizeRoomCode(rawCode);
-      if (!safeCode || !pin) {
-        showToast("Vui lòng nhập đầy đủ Mã Phòng và Mã PIN!", "error");
-        return;
-      }
-
-      showToast(`Đang kết nối mây phòng [${safeCode}]...`, "info");
-
-      currentSession = {
-        roomCode: safeCode,
-        pin: pin,
-        userName: userName || currentSession.userName || "Huy"
-      };
-
-      if (db && currentUser) {
-        try {
-          const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-          const roomDocId = `room_${safeCode.toLowerCase()}`;
-          const roomDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'rooms', roomDocId);
-          const snap = await getDoc(roomDocRef);
-
-          if (snap.exists()) {
-            const data = snap.data();
-            if (data.pin && data.pin !== pin) {
-              showToast("Sai mã PIN bảo mật của phòng này!", "error");
-              return;
-            }
-            if (data.dataJson) {
-              appData = JSON.parse(data.dataJson);
-            }
-          }
-        } catch (err) {
-          console.warn("Kiểm tra phòng mây thất bại:", err);
-        }
-      }
-
-      updateSessionLabels();
-      closeModal('modalAuthRoom');
-      await initCloudSync();
-      showToast(`Đã vào phòng [${safeCode}]! Toàn bộ thiết bị đang đồng bộ trực tiếp.`, "success");
-    }
-
-    async function handleCreateRoomSubmit(e) {
-      e.preventDefault();
-      const roomName = document.getElementById('createRoomName').value.trim();
-      const rawCode = document.getElementById('createRoomCode').value;
-      const pin = document.getElementById('createRoomPin').value.trim();
-      const adminName = document.getElementById('createAdminName').value.trim();
-
-      const safeCode = sanitizeRoomCode(rawCode);
-      if (!roomName || !safeCode || !pin || !adminName) {
-        showToast("Vui lòng điền đầy đủ các mục!", "error");
-        return;
-      }
-
-      const newRoomData = {
-        roomName: roomName,
-        roomCode: safeCode,
-        pin: pin,
-        members: [
-          { id: "m1", name: adminName, bank: "MB", account: "" },
-          { id: "m2", name: "Bạn cùng phòng 2", bank: "VCB", account: "" }
-        ],
-        checklistTasks: defaultState.checklistTasks,
-        notices: [
-          {
-            id: "n_welcome_" + Date.now(),
-            type: "general",
-            authorName: adminName,
-            title: `Chào mừng các bạn đến với ${roomName}! 🎉`,
-            content: `Phòng KTX đã được tạo thành công trên đám mây. Mã phòng: [${safeCode}], mã PIN: [${pin}]. Hãy quét QR để các bạn khác cùng mở trên điện thoại nhé!`,
-            time: new Date().toLocaleDateString('vi-VN')
-          }
-        ],
-        expenses: [],
-        paidMembers: {},
-        settledTransfers: {},
-        cleaningSchedule: defaultState.cleaningSchedule
-      };
-
-      currentSession = {
-        roomCode: safeCode,
-        pin: pin,
-        userName: adminName
-      };
-
-      appData = newRoomData;
-      updateSessionLabels();
-      renderExpenseInputs();
-      closeModal('modalAuthRoom');
-      await initCloudSync();
-      saveDataToCloud();
-      showToast(`Đã tạo phòng [${safeCode}] thành công trên đám mây!`, "success");
-    }
-
-    function switchQuickRoom(code, pin) {
-      currentSession.roomCode = code;
-      currentSession.pin = pin || "1234";
-      updateSessionLabels();
-      closeModal('modalAuthRoom');
-      initCloudSync();
-      showToast(`Đã chuyển sang phòng [${code}]!`);
-    }
-
-    function handleResetToDefaultRoom() {
-      currentSession = {
-        roomCode: "KTX402",
-        pin: "1234",
-        userName: "Huy"
-      };
-      appData = JSON.parse(JSON.stringify(defaultState));
-      updateSessionLabels();
-      renderExpenseInputs();
-      closeModal('modalAuthRoom');
-      initCloudSync();
-      saveDataToCloud();
-      showToast("Đã chuyển về phòng mẫu mặc định!");
-    }
-
-    /* UI TABS & COLLAPSIBLE STATS */
-    function toggleSidebar(show) {
-      const overlay = document.getElementById('sidebarOverlay');
-      const drawer = document.getElementById('sidebarDrawer');
-      if (!overlay || !drawer) return;
-
-      if (show) {
-        overlay.classList.remove('opacity-0', 'pointer-events-none');
-        overlay.classList.add('opacity-100');
-        drawer.classList.remove('-translate-x-full');
-      } else {
-        overlay.classList.add('opacity-0', 'pointer-events-none');
-        overlay.classList.remove('opacity-100');
-        drawer.classList.add('-translate-x-full');
-      }
-    }
-
-    function selectTabFromSidebar(tabName) {
-      toggleSidebar(false);
-      switchTab(tabName);
-    }
-
-    function switchTab(tabName) {
-      currentActiveTab = tabName;
-      const tabs = ['notices', 'expenses', 'settlement', 'duty', 'members'];
-      tabs.forEach(t => {
-        const content = document.getElementById(`tabContent-${t}`);
-        if (content) content.classList.toggle('hidden', t !== tabName);
-      });
-
-      // Cập nhật trạng thái active trong Sidebar Drawer
-      const sidebarNavMap = {
-        expenses: 'navExpenseBtn',
-        settlement: 'navSettlementBtn',
-        duty: 'navDutyBtn',
-        notices: 'navNoticeBtn',
-        members: 'navMemberBtn'
-      };
-
-      Object.entries(sidebarNavMap).forEach(([t, btnId]) => {
-        const btn = document.getElementById(btnId);
-        if (btn) {
-          if (t === tabName) {
-            btn.className = "w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold bg-indigo-600 text-white transition";
-          } else {
-            btn.className = "w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition";
-          }
-        }
-      });
-
-      const fullStats = document.getElementById('fullStatsContainer');
-      const compactStats = document.getElementById('compactStatsStrip');
-      if (tabName === 'notices') {
-        if (fullStats) fullStats.classList.remove('hidden');
-        if (compactStats) compactStats.classList.add('hidden');
-      } else {
-        if (fullStats) fullStats.classList.add('hidden');
-        if (compactStats) compactStats.classList.remove('hidden');
-      }
-    }
-
-    function toggleTopNoticeBanner() {
-      const content = document.getElementById('noticeBannerContent');
-      const icon = document.getElementById('btnToggleNoticeIcon');
-      if (!content) return;
-      isTopNoticeCollapsed = !isTopNoticeCollapsed;
-      content.classList.toggle('hidden', isTopNoticeCollapsed);
-      if (icon) {
-        icon.innerHTML = isTopNoticeCollapsed ? '<i class="fa-solid fa-chevron-down"></i>' : '<i class="fa-solid fa-chevron-up"></i>';
-      }
-    }
-
-    function openModal(id) {
-      const m = document.getElementById(id);
-      if (m) m.classList.remove('hidden');
-    }
-
-    function closeModal(id) {
-      const m = document.getElementById(id);
-      if (m) m.classList.add('hidden');
-    }
-
-    /* COMPUTE EXPENSES & OPTIMAL SETTLEMENT ROUTE */
     function computeBalances() {
       const members = appData.members || [];
       const expenses = appData.expenses || [];
@@ -2136,7 +1913,884 @@
       return transfers;
     }
 
-    /* RENDER ALL UI SECTIONS */
+    function toggleTransferPaidStatus(transferKey, fromName, toName, amount) {
+      if (!appData.settledTransfers) appData.settledTransfers = {};
+      const isPaid = !!appData.settledTransfers[transferKey];
+      appData.settledTransfers[transferKey] = !isPaid;
+
+      // Kiểm tra xem tất cả các lệnh của người chuyển này đã nộp chưa
+      const fromId = transferKey.split('_to_')[0];
+      const { balances } = computeBalances();
+      const transfers = computeOptimalTransfers(balances);
+      const myTransfers = transfers.filter(t => t.fromId === fromId);
+      const allMyTransfersPaid = myTransfers.every(t => {
+        const key = `${t.fromId}_to_${t.toId}`;
+        return !!appData.settledTransfers[key];
+      });
+
+      if (!appData.paidMembers) appData.paidMembers = {};
+      appData.paidMembers[fromId] = allMyTransfersPaid;
+
+      if (!isPaid) {
+        const autoNotice = {
+          id: 'n_paid_' + Date.now(),
+          type: 'finance',
+          authorName: fromName,
+          title: `✅ ${fromName} đã nộp ${formatVND(amount)} cho ${toName}`,
+          content: `${fromName} đã chuyển tiền bù trừ ${formatVND(amount)} cho ${toName} thành công. Trạng thái đã được cập nhật tự động!`,
+          time: new Date().toLocaleDateString('vi-VN')
+        };
+        if (!appData.notices) appData.notices = [];
+        appData.notices.unshift(autoNotice);
+      }
+
+      saveData();
+      showToast(!isPaid ? `Đã xác nhận: ${fromName} đã nộp ${formatVND(amount)}!` : `Đã hủy trạng thái nộp của ${fromName}`);
+    }
+
+    function toggleMemberPaidStatus(memberId) {
+      if (!appData.paidMembers) appData.paidMembers = {};
+      const current = !!appData.paidMembers[memberId];
+      const nextState = !current;
+      appData.paidMembers[memberId] = nextState;
+
+      // Đồng bộ sang các lệnh chuyển bù trừ liên quan của bạn này
+      const { balances } = computeBalances();
+      const transfers = computeOptimalTransfers(balances);
+      if (!appData.settledTransfers) appData.settledTransfers = {};
+      transfers.filter(t => t.fromId === memberId).forEach(t => {
+        const key = `${t.fromId}_to_${t.toId}`;
+        appData.settledTransfers[key] = nextState;
+      });
+
+      const mem = (appData.members || []).find(m => m.id === memberId);
+      const shortName = mem ? getShortName(mem.name) : "Thành viên";
+
+      if (nextState) {
+        const autoNotice = {
+          id: 'n_mem_paid_' + Date.now(),
+          type: 'finance',
+          authorName: mem ? mem.name : 'Thành viên',
+          title: `✅ ${shortName} đã nộp đầy đủ tiền sinh hoạt!`,
+          content: `${shortName} đã hoàn tất thanh toán phần chi tiêu cần bù trừ của mình.`,
+          time: new Date().toLocaleDateString('vi-VN')
+        };
+        if (!appData.notices) appData.notices = [];
+        appData.notices.unshift(autoNotice);
+      }
+
+      saveData();
+      showToast(nextState ? `Đã đổi trạng thái của ${shortName} thành "Đã nộp"!` : `Đã chuyển về "Chưa nộp" cho ${shortName}`);
+    }
+
+    function openVietQRModal(fromMemberId, toMemberId, amount) {
+      const fromMem = (appData.members || []).find(m => m.id === fromMemberId);
+      const toMem = (appData.members || []).find(m => m.id === toMemberId);
+      if (!toMem) return;
+
+      const fromName = fromMem ? getShortName(fromMem.name) : "Bạn";
+      const toName = getShortName(toMem.name);
+      const bank = toMem.bank || 'MB';
+      const account = toMem.account || '';
+      const cleanRoomCode = (currentSession.roomCode || 'KTX402').replace(/[^A-Z0-9]/gi, '');
+      
+      const randomSuffix = Math.random().toString(36).substring(2, 6).toUpperCase();
+      const memo = `${cleanRoomCode} PAY ${randomSuffix}`.trim();
+
+      activeQRTransfer = {
+        fromId: fromMemberId,
+        toId: toMemberId,
+        fromName: fromName,
+        toName: toName,
+        amount: amount,
+        memo: memo,
+        transferKey: `${fromMemberId}_to_${toMemberId}`
+      };
+
+      const qrImg = document.getElementById('qrImageElement');
+      const payerName = document.getElementById('qrPayerName');
+      const receiverName = document.getElementById('qrReceiverName');
+      const bankDetail = document.getElementById('qrBankDetail');
+      const amtDisplay = document.getElementById('qrAmountDisplay');
+      const memoDisplay = document.getElementById('qrMemoDisplay');
+      const successOverlay = document.getElementById('qrSuccessOverlay');
+      const btnConfirm = document.getElementById('btnConfirmQRPayment');
+
+      if (successOverlay) successOverlay.classList.add('hidden');
+      if (payerName) payerName.innerText = fromMem ? fromMem.name : "Bạn";
+      if (receiverName) receiverName.innerText = toMem.name;
+      if (bankDetail) bankDetail.innerText = `${bank} - ${account || 'Chưa điền STK'}`;
+      if (amtDisplay) amtDisplay.innerHTML = formatVND(amount);
+      if (memoDisplay) memoDisplay.innerText = memo;
+      if (btnConfirm) {
+        btnConfirm.innerHTML = `<i class="fa-solid fa-circle-check"></i><span>Tôi Đã Chuyển Xong (Cập Nhật Đã Nộp)</span>`;
+        btnConfirm.disabled = false;
+      }
+
+      if (account && qrImg) {
+        qrImg.src = `https://img.vietqr.io/image/${bank}-${account}-compact2.png?amount=${Math.round(amount)}&addInfo=${encodeURIComponent(memo)}&accountName=${encodeURIComponent(toMem.name)}`;
+      } else if (qrImg) {
+        qrImg.src = `https://placehold.co/240x240/f1f5f9/64748b?text=Chua+co+STK`;
+      }
+
+      openModal('modalVietQR');
+      startPaymentAutoListening(amount, memo, activeQRTransfer.transferKey);
+    }
+
+    function closeVietQRModal() {
+      stopPaymentAutoListening();
+      closeModal('modalVietQR');
+    }
+
+    function startPaymentAutoListening(expectedAmount, expectedMemo, transferKey) {
+      stopPaymentAutoListening();
+      qrPollingCount = 0;
+
+      const token = appData?.sepayToken || localStorage.getItem('KTX_SEPAY_API_TOKEN');
+      const statusText = document.getElementById('qrPollingStatusText');
+      const countTag = document.getElementById('qrPollingCountTag');
+
+      if (statusText) {
+        statusText.innerText = token 
+          ? "Đang kết nối SePay để bắt giao dịch..." 
+          : "Đang lắng nghe giao dịch (Có thể bấm 'Test Ting Ting')...";
+      }
+
+      qrPollingInterval = setInterval(async () => {
+        qrPollingCount++;
+        if (countTag) countTag.innerText = `${qrPollingCount * 3}s`;
+
+        if (token) {
+          try {
+            const res = await fetch('https://my.sepay.vn/userapi/transactions/list?limit=10', {
+              headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+              }
+            });
+
+            if (res.ok) {
+              const data = await res.json();
+              const transactions = data.transactions || data.messages || [];
+              
+              const matched = transactions.find(t => {
+                const amt = parseFloat(t.amount_in || t.amount || 0);
+                const content = (t.transaction_content || t.description || '').toUpperCase();
+                return amt >= expectedAmount && (content.includes(expectedMemo) || (activeQRTransfer && content.includes(activeQRTransfer.fromName.toUpperCase())));
+              });
+
+              if (matched) {
+                stopPaymentAutoListening();
+                confirmQRPaymentSuccess(true);
+              }
+            }
+          } catch (e) {
+            console.debug("Sepay polling tick:", e);
+          }
+        }
+      }, 3000);
+    }
+
+    function stopPaymentAutoListening() {
+      if (qrPollingInterval) {
+        clearInterval(qrPollingInterval);
+        qrPollingInterval = null;
+      }
+    }
+
+    function triggerSimulatedBankTransfer() {
+      showToast("Mô phỏng app ngân hàng chuyển tiền thành công...", "info");
+      const statusText = document.getElementById('qrPollingStatusText');
+      if (statusText) {
+        statusText.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> Ngân hàng vừa phát tín hiệu biến động số dư...`;
+      }
+
+      setTimeout(() => {
+        confirmQRPaymentSuccess(true);
+      }, 1200);
+    }
+
+    function confirmQRPaymentSuccess(isAutoDetected = false) {
+      if (!activeQRTransfer) return;
+
+      stopPaymentAutoListening();
+      const { fromId, toId, fromName, toName, amount, transferKey } = activeQRTransfer;
+
+      if (!appData.settledTransfers) appData.settledTransfers = {};
+      appData.settledTransfers[transferKey] = true;
+
+      const { balances } = computeBalances();
+      const transfers = computeOptimalTransfers(balances);
+      const myTransfers = transfers.filter(t => t.fromId === fromId);
+      const allDone = myTransfers.every(t => {
+        const key = `${t.fromId}_to_${t.toId}`;
+        return !!appData.settledTransfers[key];
+      });
+
+      if (!appData.paidMembers) appData.paidMembers = {};
+      appData.paidMembers[fromId] = allDone;
+
+      const sourcePrefix = isAutoDetected ? "⚡ [TỰ ĐỘNG BẮT VIETQR]" : "✅";
+      const autoNotice = {
+        id: 'n_qr_paid_' + Date.now(),
+        type: 'finance',
+        authorName: fromName,
+        title: `${sourcePrefix} ${fromName} đã thanh toán ${formatVND(amount)} cho ${toName}`,
+        content: `Giao dịch chuyển tiền ${formatVND(amount)} đã được hệ thống ghi nhận thành công. Trạng thái "ĐÃ NỘP" đã tự động kích hoạt trên toàn bộ thiết bị trong phòng!`,
+        time: new Date().toLocaleDateString('vi-VN')
+      };
+      if (!appData.notices) appData.notices = [];
+      appData.notices.unshift(autoNotice);
+
+      playSuccessChime();
+      const successOverlay = document.getElementById('qrSuccessOverlay');
+      const btnConfirm = document.getElementById('btnConfirmQRPayment');
+      if (successOverlay) successOverlay.classList.remove('hidden');
+      if (btnConfirm) {
+        btnConfirm.innerHTML = `<i class="fa-solid fa-check-double text-emerald-300"></i><span>ĐÃ TỰ ĐỘNG GHI NHẬN!</span>`;
+        btnConfirm.disabled = true;
+      }
+
+      saveData();
+
+      setTimeout(() => {
+        closeVietQRModal();
+        showToast(isAutoDetected ? `Ting ting! Hệ thống vừa tự nhận diện tiền về: ${fromName} đã nộp!` : `Đã xác nhận: ${fromName} đã nộp ${formatVND(amount)}!`, "success");
+      }, 1500);
+    }
+
+    function renderSettlement() {
+      const mobileContainer = document.getElementById('settlementMobileList');
+      const desktopTbody = document.getElementById('settlementTableBody');
+      const transfersContainer = document.getElementById('optimalTransfersList');
+
+      const members = appData.members || [];
+      const { balances, paid, share } = computeBalances();
+      const transfers = computeOptimalTransfers(balances);
+
+      // 1. Render Lộ trình chuyển tiền bù trừ
+      if (transfersContainer) {
+        if (transfers.length === 0) {
+          transfersContainer.innerHTML = `
+            <div class="p-6 text-center text-slate-300 text-xs">
+              <i class="fa-solid fa-circle-check text-emerald-400 text-2xl mb-2"></i>
+              <div>Tất cả các bạn đã sòng phẳng! Không cần chuyển tiền bù trừ nào.</div>
+            </div>
+          `;
+        } else {
+          transfersContainer.innerHTML = transfers.map(t => {
+            const fromMem = members.find(m => m.id === t.fromId);
+            const toMem = members.find(m => m.id === t.toId);
+
+            const fromShort = fromMem ? getShortName(fromMem.name) : "Bạn A";
+            const toShort = toMem ? getShortName(toMem.name) : "Bạn B";
+            const transferKey = `${t.fromId}_to_${t.toId}`;
+            const isSettled = !!(appData.settledTransfers && appData.settledTransfers[transferKey]);
+
+            return `
+              <div class="p-3 ${isSettled ? 'bg-emerald-950/40 border-emerald-500/40' : 'bg-white/10 hover:bg-white/15 border-white/10'} border rounded-2xl flex items-center justify-between gap-2 transition">
+                <div class="flex items-center gap-2 min-w-0">
+                  <div class="w-8 h-8 rounded-xl ${isSettled ? 'bg-emerald-500/20 text-emerald-300' : 'bg-rose-500/20 text-rose-300'} font-bold flex items-center justify-center text-xs shrink-0">
+                    <i class="fa-solid ${isSettled ? 'fa-check' : 'fa-arrow-right'}"></i>
+                  </div>
+                  <div class="min-w-0">
+                    <div class="text-xs font-bold truncate flex items-center gap-1.5">
+                      <span class="${isSettled ? 'text-emerald-200 line-through' : 'text-rose-300'}">${fromShort}</span>
+                      <i class="fa-solid fa-arrow-right text-[10px] text-slate-400"></i>
+                      <span class="text-teal-300">${toShort}</span>
+                      ${isSettled ? '<span class="px-1.5 py-0.2 rounded text-[9px] font-black bg-emerald-500 text-slate-950">ĐÃ NỘP</span>' : ''}
+                    </div>
+                    <div class="text-[10px] text-slate-300 font-mono">
+                      ${toMem?.bank ? `${toMem.bank} - ${toMem.account || ''}` : 'Chưa cập nhật STK'}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-1.5 shrink-0">
+                  <span class="font-extrabold text-xs sm:text-sm ${isSettled ? 'text-emerald-300' : 'text-amber-300'} whitespace-nowrap">${formatVND(t.amount)}</span>
+                  
+                  <button onclick="toggleTransferPaidStatus('${transferKey}', '${fromShort}', '${toShort}', ${t.amount})" class="px-2 py-1.5 rounded-xl font-bold text-[11px] transition flex items-center gap-1 shadow-2xs ${isSettled ? 'bg-slate-700 hover:bg-slate-600 text-slate-200' : 'bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black'}">
+                    <i class="fa-solid ${isSettled ? 'fa-rotate-left' : 'fa-check'}"></i>
+                    <span>${isSettled ? 'Hủy' : 'Đã nộp'}</span>
+                  </button>
+
+                  <button onclick="openVietQRModal('${t.fromId}', '${t.toId}', ${t.amount})" class="px-2.5 py-1.5 rounded-xl bg-teal-500 hover:bg-teal-400 text-slate-900 font-extrabold text-[11px] transition flex items-center gap-1 shadow-xs" title="Mở mã QR quét thanh toán">
+                    <i class="fa-solid fa-qrcode"></i>
+                    <span class="hidden sm:inline">Quét QR</span>
+                  </button>
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+      }
+
+      // 2. Render Đối Soát Từng Bạn
+      if (mobileContainer) {
+        mobileContainer.innerHTML = members.map(m => {
+          const p = paid[m.id] || 0;
+          const s = share[m.id] || 0;
+          const b = Math.round(balances[m.id] || 0);
+          const isMarkedPaid = !!(appData.paidMembers && appData.paidMembers[m.id]);
+
+          let statusBadge = '';
+          let actionButton = '';
+
+          if (b < -100) {
+            if (isMarkedPaid) {
+              statusBadge = `<span class="px-2.5 py-1 rounded-lg text-[11px] font-black bg-emerald-600 text-white shadow-2xs whitespace-nowrap flex items-center gap-1"><i class="fa-solid fa-circle-check"></i> Đã nộp</span>`;
+              actionButton = `
+                <button onclick="toggleMemberPaidStatus('${m.id}')" class="text-[10px] font-bold text-slate-400 hover:text-rose-600 transition flex items-center gap-1">
+                  <i class="fa-solid fa-rotate-left"></i> Chỉnh lại chưa nộp
+                </button>
+              `;
+            } else {
+              statusBadge = `<span class="px-2.5 py-1 rounded-lg text-[11px] font-extrabold bg-rose-50 text-rose-700 border border-rose-200 whitespace-nowrap">Cần nộp ${formatVND(-b)}</span>`;
+              actionButton = `
+                <button onclick="toggleMemberPaidStatus('${m.id}')" class="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] shadow-2xs transition flex items-center gap-1">
+                  <i class="fa-solid fa-check"></i> Xác nhận đã nộp
+                </button>
+              `;
+            }
+          } else if (b > 100) {
+            const myIncomingTransfers = transfers.filter(t => t.toId === m.id);
+            const allPaid = myIncomingTransfers.length > 0 && myIncomingTransfers.every(t => !!(appData.settledTransfers && appData.settledTransfers[`${t.fromId}_to_${t.toId}`]));
+
+            if (allPaid) {
+              statusBadge = `<span class="px-2.5 py-1 rounded-lg text-[11px] font-black bg-teal-600 text-white shadow-2xs whitespace-nowrap flex items-center gap-1"><i class="fa-solid fa-circle-check"></i> Đã nhận đủ</span>`;
+            } else {
+              statusBadge = `<span class="px-2 py-0.5 rounded-md text-[11px] font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200 whitespace-nowrap">Nhận lại ${formatVND(b)}</span>`;
+            }
+          } else {
+            statusBadge = `<span class="px-2 py-0.5 rounded-md text-[11px] font-bold bg-slate-100 text-slate-600 whitespace-nowrap">Đã hòa 0&nbsp;₫</span>`;
+          }
+
+          return `
+            <div class="bg-white p-3 rounded-2xl border ${isMarkedPaid ? 'border-emerald-300 bg-emerald-50/20' : 'border-slate-200/80'} shadow-xs space-y-2">
+              <div class="flex items-center justify-between gap-2">
+                <div class="flex items-center gap-2 min-w-0">
+                  <div class="w-8 h-8 rounded-xl ${isMarkedPaid ? 'bg-emerald-100 text-emerald-700' : 'bg-indigo-50 text-indigo-600'} font-extrabold text-xs flex items-center justify-center shrink-0">
+                    ${getNameInitial(m.name)}
+                  </div>
+                  <div class="min-w-0">
+                    <div class="font-bold text-slate-900 text-xs truncate">${m.name}</div>
+                    <div class="text-[10px] text-slate-400 font-mono">${m.bank ? `${m.bank} - ${m.account}` : 'Chưa có STK'}</div>
+                  </div>
+                </div>
+                <div class="shrink-0">${statusBadge}</div>
+              </div>
+
+              <div class="grid grid-cols-3 gap-1 pt-2 border-t border-slate-100 text-center text-[10px]">
+                <div class="bg-slate-50 p-1 rounded-lg">
+                  <div class="text-slate-400 font-semibold">Đã ứng (+)</div>
+                  <div class="font-bold text-emerald-600 whitespace-nowrap">${formatVND(p)}</div>
+                </div>
+                <div class="bg-slate-50 p-1 rounded-lg">
+                  <div class="text-slate-400 font-semibold">Phần chịu (-)</div>
+                  <div class="font-bold text-slate-700 whitespace-nowrap">${formatVND(s)}</div>
+                </div>
+                <div class="bg-slate-50 p-1 rounded-lg">
+                  <div class="text-slate-400 font-semibold">Chênh lệch</div>
+                  <div class="font-bold ${b >= 0 ? 'text-emerald-600' : 'text-rose-600'} whitespace-nowrap">${b >= 0 ? '+' : ''}${formatVND(b)}</div>
+                </div>
+              </div>
+
+              ${actionButton ? `<div class="pt-1 flex justify-end">${actionButton}</div>` : ''}
+            </div>
+          `;
+        }).join('');
+      }
+
+      if (desktopTbody) {
+        desktopTbody.innerHTML = members.map(m => {
+          const p = paid[m.id] || 0;
+          const s = share[m.id] || 0;
+          const b = Math.round(balances[m.id] || 0);
+          const isMarkedPaid = !!(appData.paidMembers && appData.paidMembers[m.id]);
+
+          let statusHtml = '';
+          let actionColHtml = '';
+
+          if (b < -100) {
+            if (isMarkedPaid) {
+              statusHtml = `<span class="px-2.5 py-1 rounded-lg text-xs font-black bg-emerald-600 text-white shadow-2xs whitespace-nowrap inline-flex items-center gap-1.5"><i class="fa-solid fa-circle-check"></i> Đã nộp</span>`;
+              actionColHtml = `
+                <button onclick="toggleMemberPaidStatus('${m.id}')" class="px-2 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-xs transition">
+                  Hủy đã nộp
+                </button>
+              `;
+            } else {
+              statusHtml = `<span class="px-2.5 py-1 rounded-lg text-xs font-extrabold bg-rose-50 text-rose-700 border border-rose-200 whitespace-nowrap">Cần nộp ${formatVND(-b)}</span>`;
+              actionColHtml = `
+                <button onclick="toggleMemberPaidStatus('${m.id}')" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-2xs transition inline-flex items-center gap-1.5">
+                  <i class="fa-solid fa-check"></i>
+                  <span>Xác nhận đã nộp</span>
+                </button>
+              `;
+            }
+          } else if (b > 100) {
+            const myIncomingTransfers = transfers.filter(t => t.toId === m.id);
+            const allPaid = myIncomingTransfers.length > 0 && myIncomingTransfers.every(t => !!(appData.settledTransfers && appData.settledTransfers[`${t.fromId}_to_${t.toId}`]));
+
+            if (allPaid) {
+              statusHtml = `<span class="px-2.5 py-1 rounded-lg text-xs font-black bg-teal-600 text-white shadow-2xs whitespace-nowrap inline-flex items-center gap-1.5"><i class="fa-solid fa-circle-check"></i> Đã nhận đủ</span>`;
+            } else {
+              statusHtml = `<span class="px-2.5 py-1 rounded-lg text-xs font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200 whitespace-nowrap">Nhận lại ${formatVND(b)}</span>`;
+            }
+            actionColHtml = `<span class="text-slate-300 text-xs">—</span>`;
+          } else {
+            statusHtml = `<span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-100 text-slate-600 whitespace-nowrap">Hòa 0&nbsp;₫</span>`;
+            actionColHtml = `<span class="text-slate-300 text-xs">—</span>`;
+          }
+
+          return `
+            <tr class="hover:bg-slate-50/80 transition ${isMarkedPaid ? 'bg-emerald-50/20' : ''}">
+              <td class="py-3 px-3">
+                <div class="flex items-center gap-2">
+                  <div class="w-7 h-7 rounded-lg ${isMarkedPaid ? 'bg-emerald-100 text-emerald-700' : 'bg-indigo-50 text-indigo-600'} font-bold text-xs flex items-center justify-center">
+                    ${getNameInitial(m.name)}
+                  </div>
+                  <div>
+                    <div class="font-bold text-slate-900">${m.name}</div>
+                    <div class="text-[10px] text-slate-400 font-mono">${m.bank ? `${m.bank} - ${m.account}` : 'Chưa có STK'}</div>
+                  </div>
+                </div>
+              </td>
+              <td class="py-3 px-3 text-right font-extrabold text-emerald-600 whitespace-nowrap">+${formatVND(p)}</td>
+              <td class="py-3 px-3 text-right font-semibold text-slate-700 whitespace-nowrap">-${formatVND(s)}</td>
+              <td class="py-3 px-3 text-right font-black ${b >= 0 ? 'text-emerald-600' : 'text-rose-600'} whitespace-nowrap">
+                ${b >= 0 ? '+' : ''}${formatVND(b)}
+              </td>
+              <td class="py-3 px-3 text-center whitespace-nowrap">${statusHtml}</td>
+              <td class="py-3 px-3 text-right whitespace-nowrap">${actionColHtml}</td>
+            </tr>
+          `;
+        }).join('');
+      }
+    }
+
+    let lastSyncTimestamp = new Date().toLocaleTimeString('vi-VN');
+    let currentSyncTab = 'cloud';
+
+    function switchSyncTab(tab) {
+      currentSyncTab = tab;
+      const tabs = ['cloud', 'qr', 'code'];
+      tabs.forEach(t => {
+        const sec = document.getElementById(`syncSection-${t}`);
+        const btn = document.getElementById(`syncTabBtn-${t}`);
+        if (sec) sec.classList.toggle('hidden', t !== tab);
+        if (btn) {
+          if (t === tab) {
+            btn.className = "py-1.5 rounded-xl transition bg-white text-emerald-700 shadow-xs";
+          } else {
+            btn.className = "py-1.5 rounded-xl transition text-slate-600 hover:text-slate-900";
+          }
+        }
+      });
+
+      if (tab === 'qr') {
+        const qrImg = document.getElementById('directSyncQRCode');
+        if (qrImg) {
+          const link = getDeviceSyncLink();
+          qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(link)}`;
+        }
+      } else if (tab === 'code') {
+        updateRawSyncPayload();
+      }
+    }
+
+    function updateRawSyncPayload() {
+      const input = document.getElementById('exportSyncPayloadInput');
+      if (!input) return;
+      try {
+        const payload = {
+          code: currentSession.roomCode,
+          pin: currentSession.pin,
+          name: appData.roomName,
+          data: appData,
+          t: Date.now()
+        };
+        const base64Str = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+        input.value = `KTX:${base64Str}`;
+      } catch (e) {
+        input.value = JSON.stringify(appData);
+      }
+    }
+
+    function copyRawSyncPayload() {
+      const input = document.getElementById('exportSyncPayloadInput');
+      if (!input || !input.value) return;
+      copyToClipboard(input.value);
+      showToast("Đã sao chép mã đồng bộ! Gửi vào Zalo để bạn kia dán vào là xong ngay.", "success");
+    }
+
+    function handleImportSyncPayload() {
+      const textarea = document.getElementById('importSyncPayloadInput');
+      let val = textarea ? textarea.value.trim() : '';
+      if (!val) {
+        showToast("Vui lòng dán chuỗi mã đồng bộ nhận từ Zalo!", "error");
+        return;
+      }
+
+      try {
+        if (val.startsWith('KTX:')) {
+          val = val.substring(4);
+        }
+        let parsed = null;
+        try {
+          const jsonStr = decodeURIComponent(escape(atob(val)));
+          parsed = JSON.parse(jsonStr);
+        } catch (e) {
+          parsed = JSON.parse(val);
+        }
+
+        if (parsed.data && parsed.code) {
+          appData = parsed.data;
+          currentSession.roomCode = parsed.code;
+          if (parsed.pin) currentSession.pin = parsed.pin;
+        } else if (parsed.roomCode && parsed.members) {
+          appData = parsed;
+          currentSession.roomCode = parsed.roomCode;
+        } else {
+          throw new Error("Dữ liệu không hợp lệ");
+        }
+
+        saveData();
+        closeModal('modalDeviceSync');
+        playSuccessChime();
+        showToast("🎉 Nạp dữ liệu đồng bộ thành công 100%!", "success");
+      } catch (err) {
+        showToast("Mã đồng bộ không hợp lệ hoặc bị thiếu ký tự!", "error");
+      }
+    }
+
+    async function handlePushDataToCloud() {
+      showToast("Đang tải dữ liệu phòng lên mây...", "info");
+      await saveDataToCloud();
+      lastSyncTimestamp = new Date().toLocaleTimeString('vi-VN');
+      const timeLbl = document.getElementById('syncModalLastTime');
+      if (timeLbl) timeLbl.innerText = `Vừa đẩy lên lúc ${lastSyncTimestamp}`;
+      showToast("Đã đẩy dữ liệu mới nhất lên mây thành công!", "success");
+    }
+
+    async function handlePullDataFromCloud() {
+      showToast("Đang tải dữ liệu từ mây về...", "info");
+      await forceSyncFromCloud();
+      lastSyncTimestamp = new Date().toLocaleTimeString('vi-VN');
+      const timeLbl = document.getElementById('syncModalLastTime');
+      if (timeLbl) timeLbl.innerText = `Vừa tải về lúc ${lastSyncTimestamp}`;
+    }
+
+    async function forceSyncFromCloud() {
+      if (!db || !currentUser) {
+        showToast("Đang kết nối lại mây...", "info");
+        await initCloudSync();
+        return;
+      }
+      try {
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const safeCode = sanitizeRoomCode(currentSession.roomCode);
+        const roomDocId = `room_${safeCode.toLowerCase()}`;
+        const roomDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'rooms', roomDocId);
+        const snap = await getDoc(roomDocRef);
+        if (snap.exists() && snap.data().dataJson) {
+          appData = JSON.parse(snap.data().dataJson);
+          updateUI();
+          renderExpenseInputs();
+          showToast("Đã tải dữ liệu mới nhất từ đám mây thành công!", "success");
+        } else {
+          showToast("Dữ liệu trên mây đã khớp với phòng hiện tại.", "info");
+        }
+      } catch (err) {
+        showToast("Không thể tải từ mây lúc này!", "error");
+      }
+    }
+
+    function openDeviceSyncModal() {
+      const code = sanitizeRoomCode(currentSession.roomCode);
+      const pin = currentSession.pin || '1234';
+
+      const codeLbl = document.getElementById('syncModalRoomCode');
+      const pinLbl = document.getElementById('syncModalRoomPin');
+      const timeLbl = document.getElementById('syncModalLastTime');
+
+      if (codeLbl) codeLbl.innerText = code;
+      if (pinLbl) pinLbl.innerText = pin;
+      if (timeLbl) timeLbl.innerText = `Lần cuối: ${lastSyncTimestamp}`;
+
+      switchSyncTab('cloud');
+      openModal('modalDeviceSync');
+    }
+
+    function openSePayConfigModal() {
+      const input = document.getElementById('inputSePayApiToken');
+      if (input) {
+        input.value = appData?.sepayToken || localStorage.getItem('KTX_SEPAY_API_TOKEN') || '';
+      }
+      openModal('modalSePayConfig');
+    }
+
+    function saveSePayConfig() {
+      const input = document.getElementById('inputSePayApiToken');
+      const val = input ? input.value.trim() : '';
+
+      if (!appData) appData = {};
+      appData.sepayToken = val;
+      localStorage.setItem('KTX_SEPAY_API_TOKEN', val);
+
+      saveData();
+      closeModal('modalSePayConfig');
+      showToast(val ? "Đã lưu SePay API Token! Hệ thống sẽ tự động bắt biến động số dư." : "Đã cập nhật cài đặt!", "success");
+    }
+
+    function clearSePayToken() {
+      if (appData) appData.sepayToken = '';
+      localStorage.removeItem('KTX_SEPAY_API_TOKEN');
+      const input = document.getElementById('inputSePayApiToken');
+      if (input) input.value = '';
+      saveData();
+      showToast("Đã xóa SePay Token khỏi máy!");
+    }
+
+    function openAuthModal(defaultTab = 'login') {
+      switchAuthTab(defaultTab);
+      renderSavedRoomsList();
+      const codeInput = document.getElementById('loginRoomCode');
+      if (codeInput) codeInput.value = currentSession.roomCode || '';
+      const pinInput = document.getElementById('loginRoomPin');
+      if (pinInput) pinInput.value = currentSession.pin || '';
+      const nameInput = document.getElementById('loginMemberName');
+      if (nameInput) nameInput.value = currentSession.userName || '';
+      openModal('modalAuthRoom');
+    }
+
+    function switchAuthTab(tab) {
+      const btnLogin = document.getElementById('authTabBtn-login');
+      const btnCreate = document.getElementById('authTabBtn-create');
+      const formLogin = document.getElementById('formLoginRoom');
+      const formCreate = document.getElementById('formCreateRoom');
+
+      if (tab === 'login') {
+        if (btnLogin) btnLogin.className = "py-2 rounded-xl transition bg-white text-indigo-600 shadow-xs";
+        if (btnCreate) btnCreate.className = "py-2 rounded-xl transition text-slate-600 hover:text-slate-900";
+        if (formLogin) formLogin.classList.remove('hidden');
+        if (formCreate) formCreate.classList.add('hidden');
+      } else {
+        if (btnCreate) btnCreate.className = "py-2 rounded-xl transition bg-white text-teal-600 shadow-xs";
+        if (btnLogin) btnLogin.className = "py-2 rounded-xl transition text-slate-600 hover:text-slate-900";
+        if (formCreate) formCreate.classList.remove('hidden');
+        if (formLogin) formLogin.classList.add('hidden');
+      }
+    }
+
+    async function handleLoginRoomSubmit(e) {
+      e.preventDefault();
+      const rawCode = document.getElementById('loginRoomCode').value;
+      const pin = document.getElementById('loginRoomPin').value.trim();
+      const userName = document.getElementById('loginMemberName').value.trim();
+
+      const safeCode = sanitizeRoomCode(rawCode);
+      if (!safeCode || !pin) {
+        showToast("Vui lòng nhập đầy đủ Mã Phòng và Mã PIN!", "error");
+        return;
+      }
+
+      showToast(`Đang kết nối mây phòng [${safeCode}]...`, "info");
+
+      currentSession = {
+        roomCode: safeCode,
+        pin: pin,
+        userName: userName || currentSession.userName || "Huy"
+      };
+
+      if (db && currentUser) {
+        try {
+          const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+          const roomDocId = `room_${safeCode.toLowerCase()}`;
+          const roomDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'rooms', roomDocId);
+          const snap = await getDoc(roomDocRef);
+
+          if (snap.exists()) {
+            const data = snap.data();
+            if (data.pin && data.pin !== pin) {
+              showToast("Sai mã PIN bảo mật của phòng này!", "error");
+              return;
+            }
+            if (data.dataJson) {
+              appData = JSON.parse(data.dataJson);
+            }
+          }
+        } catch (err) {
+          console.warn("Kiểm tra phòng mây thất bại:", err);
+        }
+      }
+
+      recordSavedRoom(safeCode, appData?.roomName || `Phòng ${safeCode}`, pin);
+      updateSessionLabels();
+      closeModal('modalAuthRoom');
+      await initCloudSync();
+      showToast(`Đã vào phòng [${safeCode}]! Toàn bộ thiết bị đang đồng bộ trực tiếp.`, "success");
+    }
+
+    async function handleCreateRoomSubmit(e) {
+      e.preventDefault();
+      const roomName = document.getElementById('createRoomName').value.trim();
+      const rawCode = document.getElementById('createRoomCode').value;
+      const pin = document.getElementById('createRoomPin').value.trim();
+      const adminName = document.getElementById('createAdminName').value.trim();
+
+      const safeCode = sanitizeRoomCode(rawCode);
+      if (!roomName || !safeCode || !pin || !adminName) {
+        showToast("Vui lòng điền đầy đủ các mục!", "error");
+        return;
+      }
+
+      const newRoomData = {
+        roomName: roomName,
+        roomCode: safeCode,
+        pin: pin,
+        sepayToken: "",
+        members: [
+          { id: "m1", name: adminName, bank: "MB", account: "" },
+          { id: "m2", name: "Bạn cùng phòng 2", bank: "VCB", account: "" }
+        ],
+        checklistTasks: defaultState.checklistTasks,
+        notices: [
+          {
+            id: "n_welcome_" + Date.now(),
+            type: "general",
+            authorName: adminName,
+            title: `Chào mừng các bạn đến với ${roomName}! 🎉`,
+            content: `Phòng KTX đã được tạo thành công trên đám mây. Mã phòng: [${safeCode}], mã PIN: [${pin}]. Hãy quét QR để các bạn khác cùng mở trên điện thoại nhé!`,
+            time: new Date().toLocaleDateString('vi-VN')
+          }
+        ],
+        expenses: [],
+        paidMembers: {},
+        settledTransfers: {},
+        cleaningSchedule: defaultState.cleaningSchedule
+      };
+
+      currentSession = {
+        roomCode: safeCode,
+        pin: pin,
+        userName: adminName
+      };
+
+      appData = newRoomData;
+      recordSavedRoom(safeCode, roomName, pin);
+      updateSessionLabels();
+      renderExpenseInputs();
+      closeModal('modalAuthRoom');
+      await initCloudSync();
+      saveDataToCloud();
+      showToast(`Đã tạo phòng [${safeCode}] thành công trên đám mây!`, "success");
+    }
+
+    function switchQuickRoom(code, pin) {
+      currentSession.roomCode = code;
+      currentSession.pin = pin || "1234";
+      updateSessionLabels();
+      closeModal('modalAuthRoom');
+      initCloudSync();
+      showToast(`Đã chuyển sang phòng [${code}]!`);
+    }
+
+    function handleResetToDefaultRoom() {
+      currentSession = {
+        roomCode: "KTX402",
+        pin: "1234",
+        userName: "Huy"
+      };
+      appData = JSON.parse(JSON.stringify(defaultState));
+      updateSessionLabels();
+      renderExpenseInputs();
+      closeModal('modalAuthRoom');
+      initCloudSync();
+      saveDataToCloud();
+      showToast("Đã chuyển về phòng mẫu mặc định!");
+    }
+
+    function toggleSidebar(show) {
+      const overlay = document.getElementById('sidebarOverlay');
+      const drawer = document.getElementById('sidebarDrawer');
+      if (!overlay || !drawer) return;
+
+      if (show) {
+        overlay.classList.remove('opacity-0', 'pointer-events-none');
+        overlay.classList.add('opacity-100');
+        drawer.classList.remove('-translate-x-full');
+      } else {
+        overlay.classList.add('opacity-0', 'pointer-events-none');
+        overlay.classList.remove('opacity-100');
+        drawer.classList.add('-translate-x-full');
+      }
+    }
+
+    function selectTabFromSidebar(tabName) {
+      toggleSidebar(false);
+      switchTab(tabName);
+    }
+
+    function switchTab(tabName) {
+      currentActiveTab = tabName;
+      const tabs = ['notices', 'expenses', 'settlement', 'duty', 'members'];
+      tabs.forEach(t => {
+        const content = document.getElementById(`tabContent-${t}`);
+        if (content) content.classList.toggle('hidden', t !== tabName);
+      });
+
+      const sidebarNavMap = {
+        expenses: 'navExpenseBtn',
+        settlement: 'navSettlementBtn',
+        duty: 'navDutyBtn',
+        notices: 'navNoticeBtn',
+        members: 'navMemberBtn'
+      };
+
+      Object.entries(sidebarNavMap).forEach(([t, btnId]) => {
+        const btn = document.getElementById(btnId);
+        if (btn) {
+          if (t === tabName) {
+            btn.className = "w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold bg-indigo-600 text-white transition";
+          } else {
+            btn.className = "w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition";
+          }
+        }
+      });
+
+      const fullStats = document.getElementById('fullStatsContainer');
+      const compactStats = document.getElementById('compactStatsStrip');
+      if (tabName === 'notices') {
+        if (fullStats) fullStats.classList.remove('hidden');
+        if (compactStats) compactStats.classList.add('hidden');
+      } else {
+        if (fullStats) fullStats.classList.add('hidden');
+        if (compactStats) compactStats.classList.remove('hidden');
+      }
+    }
+
+    function toggleTopNoticeBanner() {
+      const content = document.getElementById('noticeBannerContent');
+      const icon = document.getElementById('btnToggleNoticeIcon');
+      if (!content) return;
+      isTopNoticeCollapsed = !isTopNoticeCollapsed;
+      content.classList.toggle('hidden', isTopNoticeCollapsed);
+      if (icon) {
+        icon.innerHTML = isTopNoticeCollapsed ? '<i class="fa-solid fa-chevron-down"></i>' : '<i class="fa-solid fa-chevron-up"></i>';
+      }
+    }
+
+    function openModal(id) {
+      const m = document.getElementById(id);
+      if (m) m.classList.remove('hidden');
+    }
+
+    function closeModal(id) {
+      const m = document.getElementById(id);
+      if (m) m.classList.add('hidden');
+    }
+
     function updateUI() {
       updateSessionLabels();
       renderTopNoticeBoard();
@@ -2163,7 +2817,6 @@
       const todayMember = members.find(m => m.id === todayDuty?.memberId);
       const todayName = todayMember ? getShortName(todayMember.name) : "Chưa xếp";
 
-      // Full Stats
       const statTot = document.getElementById('statTotalExpense');
       const statAvg = document.getElementById('statAverageExpense');
       const statDutyPerson = document.getElementById('statTodayDutyPerson');
@@ -2176,7 +2829,6 @@
       if (statDutyTask) statDutyTask.innerText = todayDuty?.task || "Đổ rác & dọn phòng";
       if (statTrans) statTrans.innerText = `${transfers.length} lệnh`;
 
-      // Compact Stats
       const cTot = document.getElementById('compactTotalExpense');
       const cAvg = document.getElementById('compactAvgExpense');
       const cDuty = document.getElementById('compactTodayDuty');
@@ -2187,7 +2839,6 @@
       if (cDuty) cDuty.innerText = todayName;
       if (cTrans) cTrans.innerText = `${transfers.length} lệnh`;
 
-      // Badges
       const noticeBadge = document.getElementById('sidebarNoticeBadge');
       const expenseBadge = document.getElementById('sidebarExpenseBadge');
       const memberBadge = document.getElementById('sidebarMemberCountBadge');
@@ -2199,7 +2850,6 @@
       if (memberBadge) memberBadge.innerText = members.length;
     }
 
-    /* NOTICES: RENDER & CREATION */
     function renderTopNoticeBoard() {
       const container = document.getElementById('topNoticeList');
       if (!container) return;
@@ -2376,7 +3026,6 @@
       showToast("Đã sao chép nội dung để gửi vào nhóm chat Zalo!", "success");
     }
 
-    /* EXPENSES: FORM & CARD/TABLE RENDERING */
     function renderExpenseInputs() {
       const selectPayer = document.getElementById('selectPayer');
       const grid = document.getElementById('beneficiariesCheckboxGrid');
@@ -2485,7 +3134,6 @@
       if (!appData.expenses) appData.expenses = [];
       appData.expenses.unshift(newExpense);
 
-      // Tự động thông báo lên Bảng Tin Phòng
       const payerObj = (appData.members || []).find(m => m.id === payerId);
       const payerShort = payerObj ? getShortName(payerObj.name) : "Một bạn";
       const autoNotice = {
@@ -2694,7 +3342,6 @@
       showToast("Đã xóa khoản chi!");
     }
 
-    /* AI BILL SCANNER */
     function openScanBillModal() {
       selectedBillImageBase64 = null;
       document.getElementById('billScanPreviewContainer').classList.add('hidden');
@@ -2735,7 +3382,6 @@
         statusDiv.classList.add('hidden');
         resultForm.classList.remove('hidden');
 
-        // Gợi ý thông minh từ hóa đơn
         const mockPresets = [
           { name: "Hóa đơn Siêu thị WinMart (Gia vị + Nước mắm)", amount: 86000, category: "Ăn uống" },
           { name: "Nước xả vải Comfort + Nước lau sàn", amount: 64000, category: "Vệ sinh" },
@@ -2803,514 +3449,6 @@
       showToast(`Đã tạo khoản chi từ hóa đơn: ${name}!`, "success");
     }
 
-    /* SETTLEMENT & VIETQR MODAL */
-    function toggleTransferPaidStatus(transferKey, fromName, toName, amount) {
-      if (!appData.settledTransfers) appData.settledTransfers = {};
-      const isPaid = !!appData.settledTransfers[transferKey];
-      appData.settledTransfers[transferKey] = !isPaid;
-
-      // Kiểm tra xem tất cả các lệnh của người chuyển này đã nộp chưa
-      const fromId = transferKey.split('_to_')[0];
-      const { balances } = computeBalances();
-      const transfers = computeOptimalTransfers(balances);
-      const myTransfers = transfers.filter(t => t.fromId === fromId);
-      const allMyTransfersPaid = myTransfers.every(t => {
-        const key = `${t.fromId}_to_${t.toId}`;
-        return !!appData.settledTransfers[key];
-      });
-
-      if (!appData.paidMembers) appData.paidMembers = {};
-      appData.paidMembers[fromId] = allMyTransfersPaid;
-
-      if (!isPaid) {
-        // Tự tạo thông báo lên Bảng Tin Phòng để cả phòng cùng biết
-        const autoNotice = {
-          id: 'n_paid_' + Date.now(),
-          type: 'finance',
-          authorName: fromName,
-          title: `✅ ${fromName} đã nộp ${formatVND(amount)} cho ${toName}`,
-          content: `${fromName} đã chuyển tiền bù trừ ${formatVND(amount)} cho ${toName} thành công. Trạng thái đã được cập nhật tự động!`,
-          time: new Date().toLocaleDateString('vi-VN')
-        };
-        if (!appData.notices) appData.notices = [];
-        appData.notices.unshift(autoNotice);
-      }
-
-      saveData();
-      showToast(!isPaid ? `Đã xác nhận: ${fromName} đã nộp ${formatVND(amount)}!` : `Đã hủy trạng thái nộp của ${fromName}`);
-    }
-
-    function toggleMemberPaidStatus(memberId) {
-      if (!appData.paidMembers) appData.paidMembers = {};
-      const current = !!appData.paidMembers[memberId];
-      const nextState = !current;
-      appData.paidMembers[memberId] = nextState;
-
-      // Đồng bộ sang các lệnh chuyển bù trừ liên quan của bạn này
-      const { balances } = computeBalances();
-      const transfers = computeOptimalTransfers(balances);
-      if (!appData.settledTransfers) appData.settledTransfers = {};
-      transfers.filter(t => t.fromId === memberId).forEach(t => {
-        const key = `${t.fromId}_to_${t.toId}`;
-        appData.settledTransfers[key] = nextState;
-      });
-
-      const mem = (appData.members || []).find(m => m.id === memberId);
-      const shortName = mem ? getShortName(mem.name) : "Thành viên";
-
-      if (nextState) {
-        const autoNotice = {
-          id: 'n_mem_paid_' + Date.now(),
-          type: 'finance',
-          authorName: mem ? mem.name : 'Thành viên',
-          title: `✅ ${shortName} đã nộp đầy đủ tiền sinh hoạt!`,
-          content: `${shortName} đã hoàn tất thanh toán phần chi tiêu cần bù trừ của mình.`,
-          time: new Date().toLocaleDateString('vi-VN')
-        };
-        if (!appData.notices) appData.notices = [];
-        appData.notices.unshift(autoNotice);
-      }
-
-      saveData();
-      showToast(nextState ? `Đã đổi trạng thái của ${shortName} thành "Đã nộp"!` : `Đã chuyển về "Chưa nộp" cho ${shortName}`);
-    }
-
-    function renderSettlement() {
-      const mobileContainer = document.getElementById('settlementMobileList');
-      const desktopTbody = document.getElementById('settlementTableBody');
-      const transfersContainer = document.getElementById('optimalTransfersList');
-
-      const members = appData.members || [];
-      const { balances, paid, share } = computeBalances();
-      const transfers = computeOptimalTransfers(balances);
-
-      // Render Optimal Transfers
-      if (transfersContainer) {
-        if (transfers.length === 0) {
-          transfersContainer.innerHTML = `
-            <div class="p-6 text-center text-slate-300 text-xs">
-              <i class="fa-solid fa-circle-check text-emerald-400 text-2xl mb-2"></i>
-              <div>Tất cả các bạn đã sòng phẳng! Không cần chuyển tiền bù trừ nào.</div>
-            </div>
-          `;
-        } else {
-          transfersContainer.innerHTML = transfers.map(t => {
-            const fromMem = members.find(m => m.id === t.fromId);
-            const toMem = members.find(m => m.id === t.toId);
-
-            const fromShort = fromMem ? getShortName(fromMem.name) : "Bạn A";
-            const toShort = toMem ? getShortName(toMem.name) : "Bạn B";
-            const transferKey = `${t.fromId}_to_${t.toId}`;
-            const isSettled = !!(appData.settledTransfers && appData.settledTransfers[transferKey]);
-
-            return `
-              <div class="p-3 ${isSettled ? 'bg-emerald-950/40 border-emerald-500/40' : 'bg-white/10 hover:bg-white/15 border-white/10'} border rounded-2xl flex items-center justify-between gap-2 transition">
-                <div class="flex items-center gap-2 min-w-0">
-                  <div class="w-8 h-8 rounded-xl ${isSettled ? 'bg-emerald-500/20 text-emerald-300' : 'bg-rose-500/20 text-rose-300'} font-bold flex items-center justify-center text-xs shrink-0">
-                    <i class="fa-solid ${isSettled ? 'fa-check' : 'fa-arrow-right'}"></i>
-                  </div>
-                  <div class="min-w-0">
-                    <div class="text-xs font-bold truncate flex items-center gap-1.5">
-                      <span class="${isSettled ? 'text-emerald-200 line-through' : 'text-rose-300'}">${fromShort}</span>
-                      <i class="fa-solid fa-arrow-right text-[10px] text-slate-400"></i>
-                      <span class="text-teal-300">${toShort}</span>
-                      ${isSettled ? '<span class="px-1.5 py-0.2 rounded text-[9px] font-black bg-emerald-500 text-slate-950">ĐÃ NỘP</span>' : ''}
-                    </div>
-                    <div class="text-[10px] text-slate-300 font-mono">
-                      ${toMem?.bank ? `${toMem.bank} - ${toMem.account || ''}` : 'Chưa cập nhật STK'}
-                    </div>
-                  </div>
-                </div>
-
-                <div class="flex items-center gap-1.5 shrink-0">
-                  <span class="font-extrabold text-xs sm:text-sm ${isSettled ? 'text-emerald-300' : 'text-amber-300'} whitespace-nowrap">${formatVND(t.amount)}</span>
-                  
-                  <button onclick="toggleTransferPaidStatus('${transferKey}', '${fromShort}', '${toShort}', ${t.amount})" class="px-2 py-1.5 rounded-xl font-bold text-[11px] transition flex items-center gap-1 shadow-2xs ${isSettled ? 'bg-slate-700 hover:bg-slate-600 text-slate-200' : 'bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black'}">
-                    <i class="fa-solid ${isSettled ? 'fa-rotate-left' : 'fa-check'}"></i>
-                    <span>${isSettled ? 'Hủy' : 'Đã nộp'}</span>
-                  </button>
-
-                  <button onclick="openVietQRModal('${t.fromId}', '${t.toId}', ${t.amount})" class="px-2.5 py-1.5 rounded-xl bg-teal-500 hover:bg-teal-400 text-slate-900 font-extrabold text-[11px] transition flex items-center gap-1 shadow-xs" title="Mở mã QR quét thanh toán">
-                    <i class="fa-solid fa-qrcode"></i>
-                    <span class="hidden sm:inline">Quét QR</span>
-                  </button>
-                </div>
-              </div>
-            `;
-          }).join('');
-        }
-      }
-
-      // Render Member Balance Breakdown
-      if (mobileContainer) {
-        mobileContainer.innerHTML = members.map(m => {
-          const p = paid[m.id] || 0;
-          const s = share[m.id] || 0;
-          const b = Math.round(balances[m.id] || 0);
-          const isMarkedPaid = !!(appData.paidMembers && appData.paidMembers[m.id]);
-
-          let statusBadge = '';
-          let actionButton = '';
-
-          if (b < -100) {
-            if (isMarkedPaid) {
-              statusBadge = `<span class="px-2.5 py-1 rounded-lg text-[11px] font-black bg-emerald-600 text-white shadow-2xs whitespace-nowrap flex items-center gap-1"><i class="fa-solid fa-circle-check"></i> Đã nộp</span>`;
-              actionButton = `
-                <button onclick="toggleMemberPaidStatus('${m.id}')" class="text-[10px] font-bold text-slate-400 hover:text-rose-600 transition flex items-center gap-1">
-                  <i class="fa-solid fa-rotate-left"></i> Chỉnh lại chưa nộp
-                </button>
-              `;
-            } else {
-              statusBadge = `<span class="px-2.5 py-1 rounded-lg text-[11px] font-extrabold bg-rose-50 text-rose-700 border border-rose-200 whitespace-nowrap">Cần nộp ${formatVND(-b)}</span>`;
-              actionButton = `
-                <button onclick="toggleMemberPaidStatus('${m.id}')" class="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] shadow-2xs transition flex items-center gap-1">
-                  <i class="fa-solid fa-check"></i> Xác nhận đã nộp
-                </button>
-              `;
-            }
-          } else if (b > 100) {
-            // Kiểm tra xem tất cả các bạn nợ đã nộp đủ cho bạn này chưa
-            const myIncomingTransfers = transfers.filter(t => t.toId === m.id);
-            const allPaid = myIncomingTransfers.length > 0 && myIncomingTransfers.every(t => !!(appData.settledTransfers && appData.settledTransfers[`${t.fromId}_to_${t.toId}`]));
-
-            if (allPaid) {
-              statusBadge = `<span class="px-2.5 py-1 rounded-lg text-[11px] font-black bg-teal-600 text-white shadow-2xs whitespace-nowrap flex items-center gap-1"><i class="fa-solid fa-circle-check"></i> Đã nhận đủ</span>`;
-            } else {
-              statusBadge = `<span class="px-2 py-0.5 rounded-md text-[11px] font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200 whitespace-nowrap">Nhận lại ${formatVND(b)}</span>`;
-            }
-          } else {
-            statusBadge = `<span class="px-2 py-0.5 rounded-md text-[11px] font-bold bg-slate-100 text-slate-600 whitespace-nowrap">Đã hòa 0&nbsp;₫</span>`;
-          }
-
-          return `
-            <div class="bg-white p-3 rounded-2xl border ${isMarkedPaid ? 'border-emerald-300 bg-emerald-50/20' : 'border-slate-200/80'} shadow-xs space-y-2">
-              <div class="flex items-center justify-between gap-2">
-                <div class="flex items-center gap-2 min-w-0">
-                  <div class="w-8 h-8 rounded-xl ${isMarkedPaid ? 'bg-emerald-100 text-emerald-700' : 'bg-indigo-50 text-indigo-600'} font-extrabold text-xs flex items-center justify-center shrink-0">
-                    ${getNameInitial(m.name)}
-                  </div>
-                  <div class="min-w-0">
-                    <div class="font-bold text-slate-900 text-xs truncate">${m.name}</div>
-                    <div class="text-[10px] text-slate-400 font-mono">${m.bank ? `${m.bank} - ${m.account}` : 'Chưa có STK'}</div>
-                  </div>
-                </div>
-                <div class="shrink-0">${statusBadge}</div>
-              </div>
-
-              <div class="grid grid-cols-3 gap-1 pt-2 border-t border-slate-100 text-center text-[10px]">
-                <div class="bg-slate-50 p-1 rounded-lg">
-                  <div class="text-slate-400 font-semibold">Đã ứng (+)</div>
-                  <div class="font-bold text-emerald-600 whitespace-nowrap">${formatVND(p)}</div>
-                </div>
-                <div class="bg-slate-50 p-1 rounded-lg">
-                  <div class="text-slate-400 font-semibold">Phần chịu (-)</div>
-                  <div class="font-bold text-slate-700 whitespace-nowrap">${formatVND(s)}</div>
-                </div>
-                <div class="bg-slate-50 p-1 rounded-lg">
-                  <div class="text-slate-400 font-semibold">Chênh lệch</div>
-                  <div class="font-bold ${b >= 0 ? 'text-emerald-600' : 'text-rose-600'} whitespace-nowrap">${b >= 0 ? '+' : ''}${formatVND(b)}</div>
-                </div>
-              </div>
-
-              ${actionButton ? `<div class="pt-1 flex justify-end">${actionButton}</div>` : ''}
-            </div>
-          `;
-        }).join('');
-      }
-
-      if (desktopTbody) {
-        desktopTbody.innerHTML = members.map(m => {
-          const p = paid[m.id] || 0;
-          const s = share[m.id] || 0;
-          const b = Math.round(balances[m.id] || 0);
-          const isMarkedPaid = !!(appData.paidMembers && appData.paidMembers[m.id]);
-
-          let statusHtml = '';
-          let actionColHtml = '';
-
-          if (b < -100) {
-            if (isMarkedPaid) {
-              statusHtml = `<span class="px-2.5 py-1 rounded-lg text-xs font-black bg-emerald-600 text-white shadow-2xs whitespace-nowrap inline-flex items-center gap-1.5"><i class="fa-solid fa-circle-check"></i> Đã nộp</span>`;
-              actionColHtml = `
-                <button onclick="toggleMemberPaidStatus('${m.id}')" class="px-2 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-xs transition">
-                  Hủy đã nộp
-                </button>
-              `;
-            } else {
-              statusHtml = `<span class="px-2.5 py-1 rounded-lg text-xs font-extrabold bg-rose-50 text-rose-700 border border-rose-200 whitespace-nowrap">Cần nộp ${formatVND(-b)}</span>`;
-              actionColHtml = `
-                <button onclick="toggleMemberPaidStatus('${m.id}')" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-2xs transition inline-flex items-center gap-1.5">
-                  <i class="fa-solid fa-check"></i>
-                  <span>Xác nhận đã nộp</span>
-                </button>
-              `;
-            }
-          } else if (b > 100) {
-            const myIncomingTransfers = transfers.filter(t => t.toId === m.id);
-            const allPaid = myIncomingTransfers.length > 0 && myIncomingTransfers.every(t => !!(appData.settledTransfers && appData.settledTransfers[`${t.fromId}_to_${t.toId}`]));
-
-            if (allPaid) {
-              statusHtml = `<span class="px-2.5 py-1 rounded-lg text-xs font-black bg-teal-600 text-white shadow-2xs whitespace-nowrap inline-flex items-center gap-1.5"><i class="fa-solid fa-circle-check"></i> Đã nhận đủ</span>`;
-            } else {
-              statusHtml = `<span class="px-2.5 py-1 rounded-lg text-xs font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200 whitespace-nowrap">Nhận lại ${formatVND(b)}</span>`;
-            }
-            actionColHtml = `<span class="text-slate-300 text-xs">—</span>`;
-          } else {
-            statusHtml = `<span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-100 text-slate-600 whitespace-nowrap">Hòa 0&nbsp;₫</span>`;
-            actionColHtml = `<span class="text-slate-300 text-xs">—</span>`;
-          }
-
-          return `
-            <tr class="hover:bg-slate-50/80 transition ${isMarkedPaid ? 'bg-emerald-50/20' : ''}">
-              <td class="py-3 px-3">
-                <div class="flex items-center gap-2">
-                  <div class="w-7 h-7 rounded-lg ${isMarkedPaid ? 'bg-emerald-100 text-emerald-700' : 'bg-indigo-50 text-indigo-600'} font-bold text-xs flex items-center justify-center">
-                    ${getNameInitial(m.name)}
-                  </div>
-                  <div>
-                    <div class="font-bold text-slate-900">${m.name}</div>
-                    <div class="text-[10px] text-slate-400 font-mono">${m.bank ? `${m.bank} - ${m.account}` : 'Chưa có STK'}</div>
-                  </div>
-                </div>
-              </td>
-              <td class="py-3 px-3 text-right font-extrabold text-emerald-600 whitespace-nowrap">+${formatVND(p)}</td>
-              <td class="py-3 px-3 text-right font-semibold text-slate-700 whitespace-nowrap">-${formatVND(s)}</td>
-              <td class="py-3 px-3 text-right font-black ${b >= 0 ? 'text-emerald-600' : 'text-rose-600'} whitespace-nowrap">
-                ${b >= 0 ? '+' : ''}${formatVND(b)}
-              </td>
-              <td class="py-3 px-3 text-center whitespace-nowrap">${statusHtml}</td>
-              <td class="py-3 px-3 text-right whitespace-nowrap">${actionColHtml}</td>
-            </tr>
-          `;
-        }).join('');
-      }
-    }
-
-    function openVietQRModal(fromMemberId, toMemberId, amount) {
-      const fromMem = (appData.members || []).find(m => m.id === fromMemberId);
-      const toMem = (appData.members || []).find(m => m.id === toMemberId);
-      if (!toMem) return;
-
-      const fromName = fromMem ? getShortName(fromMem.name) : "Bạn";
-      const toName = getShortName(toMem.name);
-      const bank = toMem.bank || 'MB';
-      const account = toMem.account || '';
-      const room = appData.roomName || 'KTX 402';
-      const cleanRoomCode = (currentSession.roomCode || 'KTX402').replace(/[^A-Z0-9]/gi, '');
-      
-      // Tạo mã nhận diện duy nhất cho giao dịch này (Unique Memo)
-      const randomSuffix = Math.random().toString(36).substring(2, 6).toUpperCase();
-      const memo = `${cleanRoomCode} PAY ${randomSuffix}`.trim();
-
-      activeQRTransfer = {
-        fromId: fromMemberId,
-        toId: toMemberId,
-        fromName: fromName,
-        toName: toName,
-        amount: amount,
-        memo: memo,
-        transferKey: `${fromMemberId}_to_${toMemberId}`
-      };
-
-      const qrImg = document.getElementById('qrImageElement');
-      const payerName = document.getElementById('qrPayerName');
-      const receiverName = document.getElementById('qrReceiverName');
-      const bankDetail = document.getElementById('qrBankDetail');
-      const amtDisplay = document.getElementById('qrAmountDisplay');
-      const memoDisplay = document.getElementById('qrMemoDisplay');
-      const successOverlay = document.getElementById('qrSuccessOverlay');
-      const btnConfirm = document.getElementById('btnConfirmQRPayment');
-
-      if (successOverlay) successOverlay.classList.add('hidden');
-      if (payerName) payerName.innerText = fromMem ? fromMem.name : "Bạn";
-      if (receiverName) receiverName.innerText = toMem.name;
-      if (bankDetail) bankDetail.innerText = `${bank} - ${account || 'Chưa điền STK'}`;
-      if (amtDisplay) amtDisplay.innerHTML = formatVND(amount);
-      if (memoDisplay) memoDisplay.innerText = memo;
-      if (btnConfirm) {
-        btnConfirm.innerHTML = `<i class="fa-solid fa-circle-check"></i><span>Xác Nhận Nộp Thủ Công (Nếu cần)</span>`;
-        btnConfirm.disabled = false;
-      }
-
-      if (account && qrImg) {
-        qrImg.src = `https://img.vietqr.io/image/${bank}-${account}-compact2.png?amount=${Math.round(amount)}&addInfo=${encodeURIComponent(memo)}&accountName=${encodeURIComponent(toMem.name)}`;
-      } else if (qrImg) {
-        qrImg.src = `https://placehold.co/240x240/f1f5f9/64748b?text=Chua+co+STK`;
-      }
-
-      openModal('modalVietQR');
-
-      // Khởi động lắng nghe biến động số dư tự động qua API
-      startPaymentAutoListening(amount, memo, activeQRTransfer.transferKey);
-    }
-
-    function closeVietQRModal() {
-      stopPaymentAutoListening();
-      closeModal('modalVietQR');
-    }
-
-    /* SEPAY & AUTOMATIC TRANSACTION POLLING */
-    function startPaymentAutoListening(expectedAmount, expectedMemo, transferKey) {
-      stopPaymentAutoListening();
-      qrPollingCount = 0;
-
-      const token = appData?.sepayToken || localStorage.getItem('KTX_SEPAY_API_TOKEN');
-      const statusText = document.getElementById('qrPollingStatusText');
-      const countTag = document.getElementById('qrPollingCountTag');
-
-      if (statusText) {
-        statusText.innerText = token 
-          ? "Đang kết nối SePay để bắt giao dịch thực tế..." 
-          : "Đang lắng nghe giao dịch (Có thể thử bấm 'Test Ting Ting')...";
-      }
-
-      qrPollingInterval = setInterval(async () => {
-        qrPollingCount++;
-        if (countTag) countTag.innerText = `${qrPollingCount * 3}s`;
-
-        if (token) {
-          try {
-            const res = await fetch('https://my.sepay.vn/userapi/transactions/list?limit=10', {
-              headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-              }
-            });
-
-            if (res.ok) {
-              const data = await res.json();
-              const transactions = data.transactions || data.messages || [];
-              
-              // Tìm giao dịch khớp với số tiền và nội dung chuyển tiền
-              const matched = transactions.find(t => {
-                const amt = parseFloat(t.amount_in || t.amount || 0);
-                const content = (t.transaction_content || t.description || '').toUpperCase();
-                return amt >= expectedAmount && (content.includes(expectedMemo) || (activeQRTransfer && content.includes(activeQRTransfer.fromName.toUpperCase())));
-              });
-
-              if (matched) {
-                stopPaymentAutoListening();
-                confirmQRPaymentSuccess(true);
-              }
-            }
-          } catch (e) {
-            console.debug("Sepay polling tick:", e);
-          }
-        }
-      }, 3000);
-    }
-
-    function stopPaymentAutoListening() {
-      if (qrPollingInterval) {
-        clearInterval(qrPollingInterval);
-        qrPollingInterval = null;
-      }
-      if (autoDetectTimer) {
-        clearTimeout(autoDetectTimer);
-        autoDetectTimer = null;
-      }
-    }
-
-    function triggerSimulatedBankTransfer() {
-      showToast("Mô phỏng app ngân hàng chuyển tiền thành công...", "info");
-      const statusText = document.getElementById('qrPollingStatusText');
-      if (statusText) {
-        statusText.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> Ngân hàng vừa phát tín hiệu biến động số dư...`;
-      }
-
-      setTimeout(() => {
-        confirmQRPaymentSuccess(true);
-      }, 1500);
-    }
-
-    function openSePayConfigModal() {
-      const input = document.getElementById('inputSePayApiToken');
-      if (input) {
-        input.value = appData?.sepayToken || localStorage.getItem('KTX_SEPAY_API_TOKEN') || '';
-      }
-      openModal('modalSePayConfig');
-    }
-
-    function saveSePayConfig() {
-      const input = document.getElementById('inputSePayApiToken');
-      const val = input ? input.value.trim() : '';
-
-      if (!appData) appData = {};
-      appData.sepayToken = val;
-      localStorage.setItem('KTX_SEPAY_API_TOKEN', val);
-
-      saveData();
-      closeModal('modalSePayConfig');
-      showToast(val ? "Đã lưu SePay API Token! Hệ thống sẽ tự động bắt biến động số dư." : "Đã cập nhật cài đặt!", "success");
-    }
-
-    function clearSePayToken() {
-      if (appData) appData.sepayToken = '';
-      localStorage.removeItem('KTX_SEPAY_API_TOKEN');
-      const input = document.getElementById('inputSePayApiToken');
-      if (input) input.value = '';
-      saveData();
-      showToast("Đã xóa SePay Token khỏi máy!");
-    }
-
-    function confirmQRPaymentSuccess(isAutoDetected = false) {
-      if (!activeQRTransfer) return;
-
-      stopPaymentAutoListening();
-      const { fromId, toId, fromName, toName, amount, transferKey } = activeQRTransfer;
-
-      // 1. Cập nhật trạng thái lệnh bù trừ thành Đã nộp
-      if (!appData.settledTransfers) appData.settledTransfers = {};
-      appData.settledTransfers[transferKey] = true;
-
-      // 2. Kiểm tra xem người chuyển đã hoàn thành tất cả các lệnh của mình chưa
-      const { balances } = computeBalances();
-      const transfers = computeOptimalTransfers(balances);
-      const myTransfers = transfers.filter(t => t.fromId === fromId);
-      const allDone = myTransfers.every(t => {
-        const key = `${t.fromId}_to_${t.toId}`;
-        return !!appData.settledTransfers[key];
-      });
-
-      if (!appData.paidMembers) appData.paidMembers = {};
-      appData.paidMembers[fromId] = allDone;
-
-      // 3. Tự động ghi vào Bảng Tin Phòng để cả phòng cùng biết
-      const sourcePrefix = isAutoDetected ? "⚡ [TỰ ĐỘNG BẮT VIETQR]" : "✅";
-      const autoNotice = {
-        id: 'n_qr_paid_' + Date.now(),
-        type: 'finance',
-        authorName: fromName,
-        title: `${sourcePrefix} ${fromName} đã thanh toán ${formatVND(amount)} cho ${toName}`,
-        content: `Giao dịch chuyển tiền ${formatVND(amount)} đã được hệ thống ngân hàng xác nhận thành công. Trạng thái "ĐÃ NỘP" đã tự động kích hoạt trên toàn bộ thiết bị trong phòng!`,
-        time: new Date().toLocaleDateString('vi-VN')
-      };
-      if (!appData.notices) appData.notices = [];
-      appData.notices.unshift(autoNotice);
-
-      // 4. Phát âm thanh chuông báo và hiển thị hiệu ứng thành công
-      playSuccessChime();
-      const successOverlay = document.getElementById('qrSuccessOverlay');
-      const btnConfirm = document.getElementById('btnConfirmQRPayment');
-      if (successOverlay) successOverlay.classList.remove('hidden');
-      if (btnConfirm) {
-        btnConfirm.innerHTML = `<i class="fa-solid fa-check-double text-emerald-300"></i><span>ĐÃ TỰ ĐỘNG GHI NHẬN!</span>`;
-        btnConfirm.disabled = true;
-      }
-
-      // Lưu trữ và đồng bộ hóa tức thì sang Firebase mây
-      saveData();
-
-      setTimeout(() => {
-        closeVietQRModal();
-        showToast(isAutoDetected ? `Ting ting! Hệ thống vừa tự nhận diện tiền về: ${fromName} đã nộp!` : `Đã xác nhận: ${fromName} đã nộp ${formatVND(amount)}!`, "success");
-      }, 1500);
-    }
-
-    function simulateAutoScanCheck() {
-      triggerSimulatedBankTransfer();
-    }
-
     function copyQRTransferText() {
       const rec = document.getElementById('qrReceiverName')?.innerText || '';
       const bank = document.getElementById('qrBankDetail')?.innerText || '';
@@ -3361,7 +3499,6 @@
       }
     }
 
-    /* CLEANING SCHEDULE & DUTY SWAP */
     function renderCleaningSchedule() {
       const grid = document.getElementById('weeklyDutyGrid');
       const selectDay = document.getElementById('swapDaySelect');
@@ -3475,7 +3612,6 @@
         item.memberId = targetMemberId;
         item.reason = `Đổi từ ${getShortName(oldMember?.name)}: ${reason}`;
 
-        // Tự động phát thông báo lên Bảng Tin
         const autoNotice = {
           id: 'n_swap_' + Date.now(),
           type: 'swap',
@@ -3553,7 +3689,6 @@
       }
     }
 
-    /* CHECKLIST & MEMBERS */
     function renderChecklistTasks() {
       const container = document.getElementById('checklistTasksContainer');
       if (!container) return;
@@ -3660,7 +3795,6 @@
       showToast("Đã xóa thành viên!");
     }
 
-    /* ROOM TITLE & BACKUP */
     function openRoomSettingsModal() {
       const input = document.getElementById('inputNewRoomTitle');
       if (input) input.value = appData.roomName || "Phòng 402 - KTX";
@@ -3677,12 +3811,6 @@
       recordSavedRoom(currentSession.roomCode, val, currentSession.pin);
       closeModal('modalRoomSettings');
       showToast(`Đã đổi tên phòng thành "${val}"!`, "success");
-    }
-
-    function forceReloadLatest() {
-      const url = new URL(window.location.href);
-      url.searchParams.set('_v', Date.now().toString());
-      window.location.href = url.toString();
     }
 
     function exportDataJson() {
@@ -3720,7 +3848,7 @@
       document.body.removeChild(textArea);
     }
 
-    /* EXPORT FUNCTIONS TO WINDOW SCOPE */
+    /* GÁN TOÀN BỘ HÀM VÀO WINDOW SCOPE */
     Object.assign(window, {
       getShortName,
       getNameInitial,
@@ -3762,7 +3890,6 @@
       startPaymentAutoListening,
       stopPaymentAutoListening,
       confirmQRPaymentSuccess,
-      simulateAutoScanCheck,
       playSuccessChime,
       copyQRTransferText,
       openShareReportModal,
@@ -3786,10 +3913,32 @@
       toggleMemberPaidStatus,
       openDeviceSyncModal,
       copyDeviceSyncLink,
-      forceSyncFromCloud
+      forceSyncFromCloud,
+      switchSyncTab,
+      handlePushDataToCloud,
+      handlePullDataFromCloud,
+      copyRawSyncPayload,
+      handleImportSyncPayload
     });
 
     /* APP BOOTSTRAP */
+    function initData() {
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const roomParam = urlParams.get('room');
+        const pinParam = urlParams.get('pin');
+        if (roomParam) {
+          currentSession.roomCode = sanitizeRoomCode(roomParam);
+          if (pinParam) currentSession.pin = pinParam.trim();
+        }
+      } catch (e) {
+        console.debug("Init param err:", e);
+      }
+
+      appData.roomCode = sanitizeRoomCode(currentSession.roomCode);
+      updateSessionLabels();
+    }
+
     function startApp() {
       initData();
       renderExpenseInputs();
@@ -3797,7 +3946,6 @@
       switchTab('expenses');
       initCloudSync();
 
-      // Tự động kiểm tra và đồng bộ lại khi người dùng mở lại tab hoặc thiết bị vừa mở khóa
       document.addEventListener('visibilitychange', () => {
         if (document.visibilityState === 'visible') {
           initCloudSync();
