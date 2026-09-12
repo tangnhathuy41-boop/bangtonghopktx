@@ -3070,5 +3070,216 @@
 
     subscribeToRoom(activeRoomId);
   </script>
+<style>
+  .ktx-sync-box { max-width: 600px; margin: 20px auto; font-family: sans-serif; color: #1e293b; }
+  .ktx-card { background: #fff; border: 1px solid #cbd5e1; border-radius: 8px; padding: 16px; margin-bottom: 12px; }
+  .ktx-sync-box input, .ktx-sync-box select, .ktx-sync-box button { width: 100%; padding: 9px; margin: 5px 0; border: 1px solid #cbd5e1; border-radius: 5px; box-sizing: border-box; font-size: 14px; }
+  .ktx-sync-box button { background-color: #2563eb; color: #fff; border: none; font-weight: bold; cursor: pointer; }
+  .ktx-sync-box button:hover { background-color: #1d4ed8; }
+  .ktx-btn-sec { background-color: #64748b !important; }
+  .ktx-btn-success { background-color: #16a34a !important; }
+  .ktx-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px; margin-bottom: 10px; }
+  .ktx-tag { background: #dbeafe; color: #1e40af; padding: 3px 8px; border-radius: 12px; font-weight: bold; font-size: 13px; }
+  .ktx-item { background: #f8fafc; border-left: 4px solid #3b82f6; padding: 8px 12px; margin: 6px 0; border-radius: 4px; display: flex; justify-content: space-between; font-size: 14px; }
+  .ktx-expense { border-left-color: #ef4444; }
+  .ktx-clean { border-left-color: #22c55e; }
+  .ktx-time { font-size: 11px; color: #94a3b8; }
+  .ktx-hide { display: none; }
+</style>
+
+<div class="ktx-sync-box">
+  <div id="lobbyScreen" class="ktx-card">
+    <h3 style="margin-top:0;">Phòng KTX</h3>
+    <label>Tên của bạn:</label>
+    <input type="text" id="userNameInput" placeholder="Nhập tên..." />
+    <hr style="border:0; border-top:1px solid #e2e8f0; margin:12px 0;" />
+    <input type="text" id="newRoomName" placeholder="Tên phòng mới (VD: Phong-304)" />
+    <button id="createRoomBtn" class="ktx-btn-success">Mở phòng mới</button>
+    <hr style="border:0; border-top:1px solid #e2e8f0; margin:12px 0;" />
+    <input type="text" id="joinRoomId" placeholder="Nhập mã phòng có sẵn..." />
+    <button id="joinRoomBtn">Tham gia phòng</button>
+  </div>
+
+  <div id="roomScreen" class="ktx-hide">
+    <div class="ktx-card">
+      <div class="ktx-header">
+        <div>
+          <strong id="displayRoomName"></strong>
+          <span class="ktx-tag" id="displayRoomId"></span>
+        </div>
+        <button id="leaveRoomBtn" class="ktx-btn-sec" style="width:auto; padding:4px 8px; font-size:12px;">Rời phòng</button>
+      </div>
+      <button id="copyLinkBtn" class="ktx-btn-sec" style="font-size:12px;">Sao chép link mời phòng</button>
+    </div>
+
+    <div class="ktx-card">
+      <div style="display:flex; gap:6px;">
+        <select id="actType" style="flex:1;">
+          <option value="expense">Khoản chi tiêu</option>
+          <option value="clean">Trực nhật vệ sinh</option>
+          <option value="notice">Thông báo</option>
+        </select>
+      </div>
+      <input type="text" id="actContent" placeholder="Nội dung hoạt động..." />
+      <button id="submitActBtn">Gửi lên bảng chung</button>
+    </div>
+
+    <div class="ktx-card">
+      <div id="activitiesList"></div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import {
+    getFirestore,
+    collection,
+    doc,
+    setDoc,
+    addDoc,
+    query,
+    orderBy,
+    limit,
+    onSnapshot,
+    serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDC-r0zMV9QXyC3BOysmhpGh-ZxBU8WEb4",
+    authDomain: "quan-ly-ktx-a7106.firebaseapp.com",
+    projectId: "quan-ly-ktx-a7106",
+    storageBucket: "quan-ly-ktx-a7106.firebasestorage.app",
+    messagingSenderId: "517730884998",
+    appId: "1:517730884998:web:cdb5ffeab71f8efd45a007",
+    measurementId: "G-BDMRRZLDES"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  let currentRoomId = null;
+  let currentUser = localStorage.getItem("ktx_user") || "";
+  let unsubscribeActivities = null;
+
+  const lobbyScreen = document.getElementById("lobbyScreen");
+  const roomScreen = document.getElementById("roomScreen");
+  const userNameInput = document.getElementById("userNameInput");
+  const newRoomName = document.getElementById("newRoomName");
+  const joinRoomId = document.getElementById("joinRoomId");
+  const displayRoomId = document.getElementById("displayRoomId");
+  const displayRoomName = document.getElementById("displayRoomName");
+  const activitiesList = document.getElementById("activitiesList");
+
+  if (currentUser) userNameInput.value = currentUser;
+
+  function enterRoom(roomId, roomTitle = "") {
+    currentRoomId = roomId;
+    currentUser = userNameInput.value.trim() || "Thành viên";
+    localStorage.setItem("ktx_user", currentUser);
+
+    const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + "?room=" + encodeURIComponent(roomId);
+    window.history.pushState({ path: newUrl }, "", newUrl);
+
+    lobbyScreen.classList.add("ktx-hide");
+    roomScreen.classList.remove("ktx-hide");
+    displayRoomId.innerText = roomId;
+    displayRoomName.innerText = roomTitle || roomId;
+
+    listenActivities(roomId);
+  }
+
+  function listenActivities(roomId) {
+    if (unsubscribeActivities) unsubscribeActivities();
+
+    const q = query(
+      collection(db, "ktx_rooms", roomId, "activities"),
+      orderBy("createdAt", "desc"),
+      limit(40)
+    );
+
+    unsubscribeActivities = onSnapshot(q, (snapshot) => {
+      activitiesList.innerHTML = "";
+      if (snapshot.empty) {
+        activitiesList.innerHTML = "<p style='color:#94a3b8; font-size:13px;'>Chưa có hoạt động nào.</p>";
+        return;
+      }
+
+      snapshot.forEach((docSnap) => {
+        const data = docSnap.data();
+        const div = document.createElement("div");
+        let typeClass = "";
+        if (data.type === "expense") typeClass = "ktx-expense";
+        if (data.type === "clean") typeClass = "ktx-clean";
+
+        div.className = `ktx-item ${typeClass}`;
+        const timeStr = data.createdAt ? new Date(data.createdAt.toDate()).toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" }) : "";
+        div.innerHTML = `<div><strong>${escapeHtml(data.user)}:</strong> ${escapeHtml(data.content)}</div><div class="ktx-time">${timeStr}</div>`;
+        activitiesList.appendChild(div);
+      });
+    });
+  }
+
+  document.getElementById("createRoomBtn").addEventListener("click", async () => {
+    const raw = newRoomName.value.trim();
+    const roomId = raw ? raw.toLowerCase().replace(/\s+/g, "-") : "ktx-" + Math.floor(1000 + Math.random() * 9000);
+    const roomTitle = raw || roomId;
+
+    await setDoc(doc(db, "ktx_rooms", roomId), {
+      title: roomTitle,
+      createdAt: serverTimestamp()
+    }, { merge: true });
+
+    enterRoom(roomId, roomTitle);
+  });
+
+  document.getElementById("joinRoomBtn").addEventListener("click", () => {
+    const roomId = joinRoomId.value.trim().toLowerCase();
+    if (roomId) enterRoom(roomId);
+  });
+
+  document.getElementById("submitActBtn").addEventListener("click", async () => {
+    const contentInput = document.getElementById("actContent");
+    const content = contentInput.value.trim();
+    const type = document.getElementById("actType").value;
+    if (!content) return;
+
+    await addDoc(collection(db, "ktx_rooms", currentRoomId, "activities"), {
+      user: currentUser,
+      type: type,
+      content: content,
+      createdAt: serverTimestamp()
+    });
+    contentInput.value = "";
+  });
+
+  document.getElementById("copyLinkBtn").addEventListener("click", () => {
+    navigator.clipboard.writeText(window.location.href);
+    alert("Đã sao chép liên kết phòng!");
+  });
+
+  document.getElementById("leaveRoomBtn").addEventListener("click", () => {
+    if (unsubscribeActivities) unsubscribeActivities();
+    currentRoomId = null;
+    roomScreen.classList.add("ktx-hide");
+    lobbyScreen.classList.remove("ktx-hide");
+    const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+    window.history.pushState({ path: cleanUrl }, "", cleanUrl);
+  });
+
+  window.addEventListener("DOMContentLoaded", () => {
+    const params = new URLSearchParams(window.location.search);
+    const roomFromUrl = params.get("room");
+    if (roomFromUrl) {
+      joinRoomId.value = roomFromUrl;
+      enterRoom(roomFromUrl);
+    }
+  });
+
+  function escapeHtml(str) {
+    if (!str) return "";
+    return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+</script>
 </body>
 </html>
